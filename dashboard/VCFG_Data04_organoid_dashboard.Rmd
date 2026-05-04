@@ -1,0 +1,1296 @@
+---
+# ============================================================
+# YAML HEADER
+# This block controls the overall appearance and layout of the 
+# dashboard. It is not R code — it is read by the flexdashboard 
+# package when knitting the document.
+# ============================================================
+
+title: "VCFG Dataset 4: Organoid Screen"   # Title shown in the navbar
+output: 
+  flexdashboard::flex_dashboard:
+    theme:                      # Custom colour theme using Bootstrap Sass variables
+      bg: "white"               # Background colour of the dashboard
+      fg: "#3c2372"             # Foreground (text) colour — a dark purple
+      primary: "#3c2372"        # Primary accent colour (buttons, active elements)
+      secondary: "#3c2372"      # Secondary accent colour
+      success: "#3c2372"        # Colour for "success" state elements
+    orientation: columns        # Panels are arranged side-by-side in columns (vs rows)
+    vertical_layout: fill       # Panels expand to fill the full height of the browser.
+---
+
+<!-- ============================================================
+  CSS STYLING BLOCK
+  Raw HTML/CSS injected directly into the dashboard. This customises
+  the appearance of specific elements beyond what the YAML theme covers.
+  Each section targets a different part of the UI.
+  ============================================================ -->
+
+<style type="text/css">
+
+/* ---------------------------------------------------------
+   DataTables Buttons (Copy, Excel, Show/Hide Columns)
+   Makes the row of export buttons compact and left-aligned,
+   rather than stretching to fill the available width.
+   --------------------------------------------------------- */
+
+.dataTables_wrapper .dt-buttons {
+  display: inline-flex !important;  /* Lay buttons out in a horizontal row */
+  align-items: center;
+  gap: 6px;                         /* Small gap between each button */
+  width: auto !important;           /* Don't stretch to full container width */
+  flex: 0 0 auto !important;
+}
+
+.dt-buttons .dt-button {
+  font-size: 13px !important;
+  padding: 4px 8px !important;
+  background: #f8f8f8 !important;   /* Light grey button background */
+  border: 1px solid #bbb !important;
+  border-radius: 4px !important;
+}
+
+.dt-buttons .dt-button:hover {
+  background: #eaeaea !important;   /* Slightly darker on hover */
+  border-color: #999 !important;
+}
+
+/* ---------------------------------------------------------
+   Chart Panel Titles
+   The text shown above each panel in the dashboard.
+   --------------------------------------------------------- */
+
+.chart-title {  
+  font-size: 19px;
+  font-weight: bold;
+  color: #3c2372;   /* Match the dashboard's purple theme colour */
+}
+
+/* ---------------------------------------------------------
+   ionRangeSlider (the interactive slider filter widgets)
+   The slider is created by the crosstalk filter_slider() function.
+   These rules customise its colours and hide default labels that
+   would otherwise clutter the UI.
+   --------------------------------------------------------- */
+
+.irs-grid-text {
+  color: #3c2372;
+  display: none !important;   /* Hide the numeric grid labels beneath the slider */
+}
+
+.irs-bar {
+  background-color: #3c2372; /* Purple fill for the selected range */
+  border: 1px solid #3c2372;
+}
+
+.irs-slider {
+  background: #3c2372 !important;   /* The draggable handle colour */
+  border: 2px solid #3c2372;
+  width: 10px !important;
+  height: 10px !important;
+  top: 25px !important;             /* Vertical position of the handle */
+}
+
+.irs-single,
+.irs-from,
+.irs-to {
+  font-size: 14px !important;
+  font-weight: bold;
+  top: -4px !important;   /* Move the value label up slightly */
+  color: #3c2372;
+}
+
+.irs-min,
+.irs-max {
+  display: none !important;   /* Hide the min/max endpoint labels */
+}
+
+/* ---------------------------------------------------------
+   Navbar (the top navigation bar) — first block
+   An earlier version of the navbar rules is present here;
+   it is overridden by the more complete block below.
+   --------------------------------------------------------- */
+
+.navbar {
+  min-height: 50px !important;
+  height: 50px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Align the navbar brand (the dashboard title) vertically within the bar */
+.navbar-brand {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+  line-height: 20px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  vertical-align: middle !important;
+}
+
+/* ---------------------------------------------------------
+   Navbar (the top navigation bar) — full block
+   Controls height and vertical alignment of all nav elements.
+   This block supersedes the first .navbar block above.
+   --------------------------------------------------------- */
+
+.navbar {
+  min-height: 50px !important;
+  height: 50px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Make nav items vertically centred inside the navbar */
+.navbar-brand,
+.navbar-nav,
+.navbar-nav > li,
+.navbar-header {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+}
+
+.navbar-brand {
+  line-height: 20px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.navbar-nav {
+  margin: 0 !important;
+}
+
+/* Style individual nav links — white text, no border, flex-aligned */
+.navbar-nav > li > a {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+  line-height: 20px !important;
+  padding: 7px 12px !important;
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  font-weight: normal !important;
+  text-decoration: none !important;
+}
+
+.navbar-nav > li > a:hover {
+  color: rgba(255, 255, 255, 0.8) !important;  /* Slightly dimmed on hover */
+}
+
+/* Underline the currently active nav page */
+.navbar-nav > li.active > a,
+.navbar-nav > li > a.active,
+.navbar-nav > li[class*="active"] > a {
+  text-decoration: underline !important;
+}
+
+.navbar-nav > li.active > a:hover,
+.navbar-nav > li > a.active:hover,
+.navbar-nav > li[class*="active"] > a:hover {
+  text-decoration: underline !important;
+}
+
+/* ---------------------------------------------------------
+   Layout Spacing
+   Reduces default padding/margins so the dashboard content
+   fills more of the available screen space.
+   --------------------------------------------------------- */
+
+body {
+  padding-top: 20px !important;   /* Gap below the navbar */
+}
+
+.container-fluid {
+  padding-top: 10px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  margin: 0 !important;
+  width: 100% !important;   /* Use full browser width */
+}
+
+.row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
+/* Tighten column gutters, with a small top padding */
+.col-md-4,
+.col-md-8 {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  padding-top: 10px !important;
+}
+
+/* Push content down to clear the fixed navbar height */
+.navbar ~ .container-fluid,
+.navbar + .container-fluid {
+  margin-top: 55px !important;
+}
+
+/* Tighten bottom spacing on chart panels */
+.section.level3,
+.chart-wrapper,
+.chart-stage,
+.html-widget {
+  margin-bottom: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+/* ---------------------------------------------------------
+   Crosstalk Checkbox Labels
+   Makes the category labels next to checkbox filters slightly 
+   larger for readability.
+   --------------------------------------------------------- */
+
+.crosstalk-input label {
+  font-size: 14.5px !important;
+}
+
+/* ---------------------------------------------------------
+   Global Font Size
+   Overrides the default body font size for the whole dashboard.
+   A smaller size (14px) is used here compared to other dashboards
+   because this dashboard has more content to display.
+   --------------------------------------------------------- */
+
+body {
+  font-size: 14px !important;
+}
+
+</style>
+
+
+```{r setup, include=FALSE}
+# ============================================================
+# SETUP CHUNK
+# 'include=FALSE' means this chunk runs silently — its code and
+# output are NOT shown in the final dashboard.
+#
+# Here we:
+#   1. Load all required R packages
+#   2. Set a filename prefix and cell line variable
+#   3. Apply a global option to suppress scientific notation
+#   4. Set global knitr chunk options
+# ============================================================
+
+# --- Load packages ---
+library(data.table)    # Fast data manipulation (used here mainly for compatibility)
+library(DT)            # Creates interactive HTML data tables (DataTables.js)
+library(patchwork)     # Combines multiple ggplot2 plots (loaded for compatibility)
+library(plotly)        # Creates interactive, web-based plots
+library(tidyverse)     # Core data science packages: dplyr, ggplot2, readr, tidyr, etc.
+library(flexdashboard) # Turns R Markdown into an interactive web dashboard
+library(crosstalk)     # Enables linked filtering across multiple HTML widgets
+library(htmltools)     # Tools for building HTML elements from R
+library(htmlwidgets)   # Framework for creating R bindings to JavaScript libraries;
+                       # used here for onRender() to run custom JS on a DT widget
+library(purrr)         # Functional programming tools (map, walk, etc.); loaded
+                       # for compatibility though lapply() is used directly below
+
+# --- Set filename prefix ---
+prefix <- "VCFG_Data04"
+
+# --- Suppress scientific notation ---
+# This forces use of decimals to improve readability
+options(scipen = 999)
+
+# --- Set global knitr chunk options ---
+# These apply to all subsequent code chunks unless overridden locally.
+# echo = FALSE: don't show any R code in the knitted output (just results)
+# collapse = FALSE: keep code output separate from the code itself (default behaviour)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  collapse = FALSE
+)
+```
+
+```{r cell line original data, include=TRUE}
+# ============================================================
+# DATA IMPORT AND PREPARATION — CELL LINE DATA
+#
+# This dashboard works with data from a single cell line (c).
+# Three separate data files are read in and processed:
+#
+#   1. pred_all_data_mean:  Per-well imaging model predictions 
+#                           (average probability a cell is alive)
+#   2. pred_all_data_aucn:  Per-compound imaging model summary 
+#                           (AUC of survival probability across doses)
+#   3. analysed_data_comp:  Per-compound CTG viability summary stats
+#                           (CTG AUC, Robust Z-scores)
+#   4. analysed_data_well:  Per-well CTG viability measurements
+#
+# The imaging data (pred_all_data_mean, pred_all_data_aucn) and 
+# CTG data (analysed_data_comp, analysed_data_well) are joined 
+# together so each compound/well has both CTG and ML predictions.
+# ============================================================
+
+# --- Set the cell line ---
+c <- "Cell_LineX"
+
+# ============================================================
+# FILE 1: Per-well imaging prediction data
+# Contains one row per well with the model's predicted probability
+# that cells in that well are alive (prob_alive: 0 = dead, 1 = alive).
+# ============================================================
+pred_all_data_mean <- read_csv(paste0("../data/VCFG_Data04/", prefix, "_pred_all_data_mean.csv")) %>% 
+  select(VCFG_Plate_ID = Plate_Folder,  
+         WellID, 
+         prob_alive) %>% 
+  mutate_at(3, round, 2)                
+
+# ============================================================
+# FILE 2: Per-compound imaging prediction summary
+# Contains one row per compound with AUC metrics from the ML model.
+# ML_AUC is the raw area under the survival curve; ML_Relative_AUC 
+# is that value normalised to the DMSO control.
+# ============================================================
+pred_all_data_aucn <- read_csv(paste0("../data/VCFG_Data04/", prefix, "_pred_all_data_aucn.csv")) %>% 
+  select(Compound_Name, 
+         ML_AUC = AUC,                   
+         ML_Relative_AUC = Relative_AUC) %>% 
+  mutate_at(2:3, round, 2)             
+
+# ============================================================
+# FILE 3: Per-compound CTG viability summary
+# Contains one row per compound with AUC and Z-score metrics
+# calculated from CTG (CellTiter-Glo) luminescence viability data.
+# ============================================================
+analysed_data_comp <- read_csv(paste0("../data/VCFG_Data04/", prefix, "_analysed_data_comp.csv")) %>%
+  filter(Cell_Line == c) %>%
+  left_join(., pred_all_data_aucn, by = "Compound_Name") %>% 
+  
+  mutate(
+    Direction = case_when(
+      Robust_ZScore_AUC < 0  ~ "Negative",
+      Robust_ZScore_AUC >= 0 ~ "Positive",
+      TRUE ~ NA),
+    ZScore_abs = abs(Robust_ZScore_AUC),
+    Robust_ZScore_Bin = case_when(
+      ZScore_abs >= 0   & ZScore_abs < 2   ~ 0,
+      ZScore_abs >= 2   & ZScore_abs < 2.5 ~ 2,
+      ZScore_abs >= 2.5 & ZScore_abs < 3   ~ 2.5,
+      ZScore_abs >= 3   & ZScore_abs < 3.5 ~ 3,
+      ZScore_abs >= 3.5 & ZScore_abs < 4   ~ 3.5,
+      ZScore_abs >= 4   & ZScore_abs < 4.5 ~ 4,
+      ZScore_abs >= 4.5 & ZScore_abs < 5   ~ 4.5,
+      ZScore_abs >= 5   & ZScore_abs < 5.5 ~ 5,
+      ZScore_abs >= 5.5 & ZScore_abs < 6   ~ 5.5,
+      ZScore_abs >= 6   & ZScore_abs < 6.5 ~ 6,
+      ZScore_abs >= 6.5 & ZScore_abs < 7   ~ 6.5,
+      ZScore_abs >= 7   & ZScore_abs < 7.5 ~ 7,
+      ZScore_abs >= 7.5 & ZScore_abs < 8   ~ 7.5,
+      ZScore_abs >= 8                       ~ 8,
+      TRUE ~ NA)
+  )
+
+# ============================================================
+# FILE 4: Per-well CTG viability data
+# Contains one row per well (compound × dose) with raw and
+# normalised CTG luminescence values and their Z-scores.
+# ============================================================
+analysed_data_well <- read_csv(paste0("../data/VCFG_Data04/", prefix, "_analysed_data_well.csv")) %>% 
+  filter(Cell_Line == c) %>% 
+  left_join(., pred_all_data_mean, by = c("VCFG_Plate_ID", "WellID")) %>%
+  mutate(
+    Conc = paste0(Concentration, Units),
+    ZScore_Sig = case_when(
+      Robust_ZScore <= -2 | Robust_ZScore >= 2 ~ "Significant",
+      TRUE ~ "Not Significant")
+  ) %>% 
+  mutate(
+    ML_Viability_Bin = case_when(
+      prob_alive >= 0   & prob_alive < 0.2 ~ "Very Low",
+      prob_alive >= 0.2 & prob_alive < 0.4 ~ "Low",
+      prob_alive >= 0.4 & prob_alive < 0.7 ~ "Moderate",
+      prob_alive >= 0.7 & prob_alive < 1.1 ~ "Normal",
+      TRUE ~ NA)
+  )
+
+# ============================================================
+# WIDE FORMAT DATA — For per-dose-point checkbox filters
+# ============================================================
+analysed_data_well_wide <- analysed_data_well %>% 
+  pivot_wider(
+    id_cols = c(Compound_Name),
+    names_from = Conc,                            # Creates column names like ZScore_Sig_10uM
+    values_from = c(ZScore_Sig, ML_Viability_Bin) # Two sets of new columns, one per dose
+  ) %>% 
+  mutate(
+    across(everything(), ~ifelse(is.na(.), "Missing Data", .)),
+    across(starts_with("ZScore_Sig"), 
+           ~factor(., levels = c("Missing Data", "Not Significant", "Significant"))),
+    across(starts_with("ML_Viability"),
+           ~factor(., levels = c("Missing Data", "Very Low", "Low", "Moderate", "Normal")))
+  )
+```
+
+```{r cell line display data, include=TRUE}
+# ============================================================
+# DISPLAY DATA — Trimmed tables for the dashboard tables
+# disp_data_comp: Compound-level summary (one row per compound)
+# disp_data_well: Dose-level measurements (one row per well)
+# ============================================================
+
+disp_data_comp <- analysed_data_comp %>% 
+  select(Compound_Name,
+         Relative_AUC, Robust_ZScore_AUC,   # CTG-based metrics
+         ML_AUC, ML_Relative_AUC) %>%        # ML imaging-based metrics
+  arrange(Compound_Name)
+
+disp_data_well <- analysed_data_well %>%
+  select(Compound_Name, Conc,
+         CTG, CTG_Norm, Robust_ZScore,       # Raw and normalised CTG values
+         prob_alive, ML_Viability_Bin) %>%   # ML imaging prediction columns
+  arrange(Compound_Name)
+```
+
+```{r cell line shared data, include=TRUE}
+# ============================================================
+# CROSSTALK SHARED DATA OBJECTS
+#
+# Crosstalk allows multiple HTML widgets (tables, sliders, checkboxes,
+# plots) to communicate with each other — when a filter is applied,
+# all widgets sharing the same group update simultaneously.
+#
+# SharedData$new() wraps a dataframe into a crosstalk-aware object.
+# Key arguments:
+#   group = "drug"        : All widgets in this group are linked together.
+#                           Filtering one widget filters all others in the group.
+#   key = ~Compound_Name  : The column used to match rows across datasets.
+#                           ALL shared data objects here use Compound_Name as 
+#                           the key so that selecting/filtering a compound updates
+#                           every linked widget simultaneously.
+#
+# FIVE shared data objects are created, serving different roles:
+#
+#   data_comp_shared:    Full compound-level data (for filter widgets + plot).
+#                        Includes the binned Z-score and Direction columns 
+#                        needed by the sidebar filters.
+#
+#   data_well_shared:    Full well-level data (for filter widgets).
+#                        Contains the raw per-dose measurements; filters applied 
+#                        here propagate to the dose-level display table.
+#
+#   data_well_wide_shared: Wide-format well data (for per-dose checkbox filters).
+#                        This is the pivoted data with one row per compound and 
+#                        separate columns per dose (e.g. ZScore_Sig_10uM).
+#                        Checkbox filters for individual dose points are linked 
+#                        to this object because crosstalk checkboxes require a 
+#                        single column per filter, not long-format data.
+#
+#   disp_comp_shared:    Trimmed compound display data (for the compound table).
+#                        Only contains columns shown to the user; shares the same 
+#                        group so the table responds to all sidebar filters.
+#
+#   disp_well_shared:    Trimmed well display data (for the dose-level table).
+#                        Only contains columns shown to the user; responds to the 
+#                        same filters as the compound table.
+# ============================================================
+
+# Full data for filter widgets and plot
+data_comp_shared     <- SharedData$new(analysed_data_comp,      group = "drug", key = ~Compound_Name)
+data_well_shared     <- SharedData$new(analysed_data_well,      group = "drug", key = ~Compound_Name)
+data_well_wide_shared <- SharedData$new(analysed_data_well_wide, group = "drug", key = ~Compound_Name)
+
+# Trimmed data for display/download tables
+disp_comp_shared <- SharedData$new(disp_data_comp, group = "drug", key = ~Compound_Name)
+disp_well_shared <- SharedData$new(disp_data_well, group = "drug", key = ~Compound_Name)
+```
+
+<!-- ============================================================
+  DASHBOARD LAYOUT
+  In flexdashboard, the layout is controlled by Markdown headings.
+  
+  '## Column {data-width=350}' starts a new column with a fixed 
+  pixel width of 350. The remaining columns share the leftover space.
+  '### Panel Title' creates a named panel within a column.
+  ============================================================ -->
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Hit selection filters
+
+<!-- Static Markdown text explaining the filter sections. -->
+
+***1. Filter compounds based on the CTG Robust Z-score across the entire dose-range (calculated based on the relative AUC)*** <br>
+Z-scores ±2 or more are generally considered to be significant, but this is dependent on the hit rate and strength of the equivalent fold change values.
+
+```{r}
+# ============================================================
+# FILTER 1 — Z-score Direction Checkbox
+#
+# This checkbox filter lets users select whether to view compounds 
+# with negative Z-scores (decreased viability), positive Z-scores 
+# (increased viability), or both.
+#
+# The Direction column in data_comp_shared was pre-calculated in the 
+# data prep step as "Negative" or "Positive" based on Robust_ZScore_AUC.
+#
+# Note: the JavaScript block below modifies this filter on page load 
+# to pre-select "Negative" only and enforce single-selection behaviour,
+# since this screen is primarily searching for compounds that reduce viability.
+#
+# allLevels = TRUE: Show all factor levels, even if currently filtered out
+# inline = TRUE:    Place checkboxes side by side rather than stacked
+# columns = 1:      With inline = TRUE, arrange into a single column
+# ============================================================
+filter_checkbox(
+  id = "filter1",
+  label = "Negative values indicate a decrease, positive values indicate an increase.",
+  sharedData = data_comp_shared,
+  ~Direction,
+  allLevels = TRUE,
+  inline = TRUE,
+  columns = 1
+)
+```
+
+```{r}
+# ============================================================
+# FILTER 2 — Z-score Magnitude Slider
+#
+# This slider filters compounds by the absolute magnitude of their 
+# Z-score. Combined with the Direction filter above, it allows the 
+# user to select compounds with, for example, a Z-score more negative 
+# than -3 (Direction = Negative; slider min = 3).
+#
+# The slider uses Robust_ZScore_Bin (the binned absolute Z-score from 
+# data prep) rather than the raw Z-score, so the slider moves in 
+# clean 0.5-unit steps rather than through many decimal place values.
+#
+# round = FALSE: Don't round the slider value to the nearest integer
+# ticks = FALSE: Don't show tick marks below the slider track
+# ============================================================
+filter_slider(
+  id = "filter2",
+  label = "Z-score cut-off:",
+  sharedData = data_comp_shared,
+  ~Robust_ZScore_Bin,
+  step = 0.5,
+  round = FALSE,
+  ticks = FALSE
+)
+```
+
+<br>
+
+***2. Filter compounds based on acceptable CTG Z-scores at individual dose points*** <br>
+Un-tick the *Not Significant* option to filter for compounds with a significant CTG Z-score (±2) at each dose-point. 
+
+```{r}
+# ============================================================
+# FILTERS 3–5 — Per-dose-point Z-score Significance Checkboxes
+#
+# These three checkboxes filter at the individual dose level, letting 
+# users require that a compound has a significant Z-score at a specific 
+# concentration (10µM, 1µM, or 0.1µM).
+#
+# They are linked to data_well_wide_shared (the pivoted wide-format data)
+# because each dose has its own column (ZScore_Sig_10uM, ZScore_Sig_1uM, 
+# ZScore_Sig_0.1uM). Crosstalk checkboxes require a single column per 
+# filter — the wide format provides this.
+#
+# Each column has three possible values: "Missing Data", "Not Significant",
+# and "Significant". The allLevels = TRUE argument ensures all three 
+# options always appear even if some are currently filtered out.
+#
+# The JavaScript block below pre-ticks all options by default (i.e. no 
+# compounds are excluded by these filters until the user actively un-ticks).
+# ============================================================
+filter_checkbox(
+  id = "filter3",
+  label = "10μM",
+  sharedData = data_well_wide_shared,
+  ~ZScore_Sig_10uM,
+  allLevels = TRUE,
+  inline = TRUE,
+  columns = 1
+)
+
+filter_checkbox(
+  id = "filter4",
+  label = "1μM",
+  sharedData = data_well_wide_shared,
+  ~ZScore_Sig_1uM,
+  allLevels = TRUE,
+  inline = TRUE,
+  columns = 1
+)
+
+filter_checkbox(
+  id = "filter5",
+  label = "0.1μM",
+  sharedData = data_well_wide_shared,
+  ~ZScore_Sig_0.1uM,
+  allLevels = TRUE,
+  inline = TRUE,
+  columns = 1
+)
+```
+
+<br>
+
+***3. Filter compounds based on ML predicted viability at individual dose points*** <br>
+Un-tick the *Moderate* and/or *Normal* options to filter for compounds with very-low/low predicted cell viability at each dose-point.
+
+```{r}
+# ============================================================
+# FILTERS 6–8 — Per-dose-point ML Viability Checkboxes
+#
+# These three checkboxes work the same way as filters 3–5, but 
+# filter on the ML model's predicted viability category at each dose 
+# (ML_Viability_Bin_10uM, ML_Viability_Bin_1uM, ML_Viability_Bin_0.1uM)
+# rather than on CTG Z-score significance.
+#
+# The four possible viability categories are:
+#   "Missing Data", "Very Low", "Low", "Moderate", "Normal"
+# Un-ticking "Moderate" and "Normal" restricts the view to compounds 
+# where the ML model predicts notable cell death at that dose.
+# ============================================================
+filter_checkbox(
+  id = "filter6",
+  label = "10μM",
+  sharedData = data_well_wide_shared,
+  ~ML_Viability_Bin_10uM,
+  allLevels = TRUE,
+  inline = TRUE,
+  columns = 1
+)
+
+filter_checkbox(
+  id = "filter7",
+  label = "1μM",
+  sharedData = data_well_wide_shared,
+  ~ML_Viability_Bin_1uM,
+  allLevels = TRUE,
+  inline = TRUE,
+  columns = 1
+)
+
+filter_checkbox(
+  id = "filter8",
+  label = "0.1μM",
+  sharedData = data_well_wide_shared,
+  ~ML_Viability_Bin_0.1uM,
+  allLevels = TRUE,
+  inline = TRUE,
+  columns = 1
+)
+```
+
+```{js}
+// ============================================================
+// JAVASCRIPT: Default filter state and custom filtering logic
+//
+// This block runs once after the page has fully loaded. It handles
+// three separate tasks:
+//
+//   1. Pre-select "Negative" in filter1 and enforce single-selection
+//   2. Pre-tick all options in filters 3–8 (so no rows are excluded by default)
+//   3. Set up cross-table synchronisation between the compound and well tables
+//
+// $(document).ready() runs the code inside once the page DOM is loaded.
+// setTimeout(..., 300) adds a 300ms delay to ensure all crosstalk widgets 
+// have fully initialised before the script tries to interact with them.
+// ============================================================
+$(document).ready(function() {
+  setTimeout(function() {
+
+    // -------- TASK 1: Set up filter1 (Direction checkbox) --------
+    // This screen is looking for compounds that reduce viability, so 
+    // the page should load with "Negative" pre-selected.
+    // We also enforce single-selection so only one direction can be 
+    // active at a time.
+
+    // First, uncheck ALL checkboxes in filter1
+    $("#filter1 input[type='checkbox']").prop("checked", false);
+
+    // Then check only the "Negative" option and trigger a change event
+    // so crosstalk registers the new selection
+    $("#filter1 input[type='checkbox'][value='Negative']").prop("checked", true).trigger("change");
+
+    // Add an event handler so that checking one option unchecks all others
+    $("#filter1 input[type='checkbox']").on("change", function() {
+      var $this = $(this);
+
+      if ($this.is(":checked")) {
+        // Uncheck all other boxes and trigger their change events
+        $("#filter1 input[type='checkbox']").not($this).prop("checked", false).trigger("change");
+      } else {
+        // Prevent the user from unchecking the last box (at least one must be selected)
+        var anyChecked = $("#filter1 input[type='checkbox']:checked").length > 0;
+        if (!anyChecked) {
+          $this.prop("checked", true);
+        }
+      }
+    });
+
+    // -------- TASK 2: Pre-tick all options in filters 3–8 --------
+    // By default, crosstalk checkboxes load with nothing ticked, which 
+    // hides all data. We pre-tick everything so all compounds are visible 
+    // on page load, and users only need to un-tick to restrict the view.
+    // .trigger("change") fires the crosstalk change event so the tables update.
+    $("#filter3 input[type='checkbox']").prop("checked", true).trigger("change");
+    $("#filter4 input[type='checkbox']").prop("checked", true).trigger("change");
+    $("#filter5 input[type='checkbox']").prop("checked", true).trigger("change");
+    $("#filter6 input[type='checkbox']").prop("checked", true).trigger("change");
+    $("#filter7 input[type='checkbox']").prop("checked", true).trigger("change");
+    $("#filter8 input[type='checkbox']").prop("checked", true).trigger("change");
+
+    // -------- TASK 3: Cross-table synchronisation --------
+    // The compound-level table and the dose-level well table are both 
+    // linked to the same crosstalk group ("drug"), so filtering one 
+    // should filter the other. However, crosstalk's built-in linking 
+    // requires each dataset to share an identical key column — and here, 
+    // the compound table has one row per compound while the well table 
+    // has multiple rows per compound (one per dose).
+    //
+    // The custom functions below work around this by:
+    //   a. Reading the currently visible compound names from the compound table
+    //   b. Manually filtering the well table to show only rows matching 
+    //      those compound names
+    //
+    // This ensures that filtering by compound-level metrics (Z-score, direction)
+    // also correctly updates the per-dose well table.
+
+    // --- Helper: find which compound names are currently passing filters ---
+    function getVisibleCompounds() {
+      var visibleCompounds = [];
+      // Find the compound table widget by looking for 'compound' in its ID
+      // or 'Per Compound' in the heading of its containing section
+      var compoundTable = window.HTMLWidgets.find(".datatables").filter(function(widget) {
+        return widget.el.id.includes("compound") || $(widget.el).closest('.section').find('h3').text().includes('Per Compound');
+      })[0];
+      
+      if (compoundTable && compoundTable.x && compoundTable.x.data) {
+        var filteredData = compoundTable.x.crosstalkFilter.filteredKeys;
+        if (filteredData && filteredData.length > 0) {
+          visibleCompounds = filteredData;   // Use the crosstalk-filtered key list
+        } else {
+          // No active filter — collect all compound names from the raw table data
+          compoundTable.x.data.forEach(function(row, index) {
+            var compoundName = row[0];  // Column 0 = Compound_Name
+            if (compoundName) visibleCompounds.push(compoundName);
+          });
+        }
+      }
+      return visibleCompounds;
+    }
+    
+    // --- Helper: update the well table to show only matching compounds ---
+    function updateWellTable() {
+      var visibleCompounds = getVisibleCompounds();
+      
+      // Find the well table widget by looking for 'well' in its ID
+      // or 'Per Dose' in the heading of its containing section
+      var wellTable = window.HTMLWidgets.find(".datatables").filter(function(widget) {
+        return widget.el.id.includes("well") || $(widget.el).closest('.section').find('h3').text().includes('Per Dose');
+      })[0];
+      
+      if (wellTable && wellTable.x && wellTable.x.data) {
+        var visibleRows = [];
+        
+        // Check each row of the well table; keep those whose compound is in the visible list
+        wellTable.x.data.forEach(function(row, index) {
+          var compoundName = row[0];  // Column 0 = Compound_Name
+          if (visibleCompounds.includes(compoundName)) {
+            visibleRows.push(index);
+          }
+        });
+        
+        // Push the updated row visibility to the well table's crosstalk filter
+        if (wellTable.x.crosstalkFilter) {
+          wellTable.x.crosstalkFilter.set(visibleRows);
+        }
+      }
+    }
+    
+    // Listen for any crosstalk filter change event and update the well table.
+    // The 100ms delay ensures the compound table has finished updating before 
+    // we try to read its visible rows.
+    $(document).on('crosstalk:filter', function(event) {
+      setTimeout(updateWellTable, 100);
+    });
+    
+    // Run once on page load so the well table is correct from the start
+    setTimeout(updateWellTable, 1000);
+
+  }, 300);
+});
+```
+
+Column 
+-----------------------------------------------------------------------
+
+### Compound-Level Table
+
+```{r}
+# ============================================================
+# COMPOUND-LEVEL DATA TABLE
+#
+# datatable() creates an interactive HTML table. This table is 
+# additionally extended with a custom onRender() callback (from 
+# the htmlwidgets package) that connects table row clicks to the 
+# image panel in the third column — clicking a row in this table 
+# updates the compound images displayed below the scatter plot.
+#
+# Extensions used:
+#   'Buttons'  : Adds Copy/Excel buttons above the table
+#   'Scroller' : Replaces pagination with virtual scrolling — the table 
+#                scrolls smoothly through all rows without page breaks,
+#                only rendering the visible rows for performance
+#   'FixedColumns': Freezes the leftmost columns during horizontal scrolling
+# ============================================================
+comp_dt <- datatable(
+  disp_comp_shared, 
+  extensions = c('Buttons', 'Scroller', "FixedColumns"), 
+  rownames = FALSE,
+  options = list(
+    dom = 'Brfti',   # B=Buttons, r=processing, f=filter/search, t=table, i=info text
+    columnDefs = list(list(className = 'dt-center', targets = "_all")),
+    pageLength = 50,
+    buttons = list(
+      list(extend = 'copyHtml5', text = "Copy to Clipboard"),
+      list(extend = 'excel',
+           filename = paste0(prefix, "_Hits_PerCompound_Data_", c), 
+           title = NULL)),
+    searching = TRUE,
+    scrollX = TRUE,
+    paging = TRUE,
+    fixedColumns = list(leftColumns = 2)
+  )
+) %>%
+  
+  # ============================================================
+  # onRender() — Custom JavaScript run when the table is first drawn
+  #
+  # This callback is from the htmlwidgets package. It runs client-side 
+  # JavaScript after the table widget is rendered in the browser, giving 
+  # access to the underlying DataTables API (tbl) and the DOM element (el).
+  #
+  # The code here does two things:
+  #   1. On page load, pushes the first visible compound name to 
+  #      window.updateCompoundImages() so the image panel shows 
+  #      relevant images immediately.
+  #   2. Adds a click handler to table rows so that clicking any row 
+  #      calls window.updateCompoundImages() with that compound's name,
+  #      updating the images in the panel below the plot.
+  #   3. On table redraw (e.g. after sorting or searching), updates the 
+  #      images to match the new first visible row.
+  #
+  # window.updateCompoundImages is defined in the image panel chunk below — 
+  # it is attached to the global window object so it can be called from 
+  # anywhere in the page's JavaScript.
+  # ============================================================
+  htmlwidgets::onRender("
+    function(el, x) {
+      var $el = $(el); 
+      var tbl = $el.find('table').DataTable();
+
+      var compoundCol = 0; // 0-based column index: column 0 = Compound_Name
+
+      // Helper: push a compound name to the image updater
+      function pushCompound(comp) {
+        if (window.updateCompoundImages) window.updateCompoundImages(comp);
+      }
+
+      // On initial render, show images for the first visible row
+      var first = tbl.row({search:'applied'}).data();
+      if (first && first[compoundCol]) pushCompound(first[compoundCol]);
+
+      // On row click: update images to match the clicked compound
+      $el.on('click', 'tbody tr', function() {
+        var data = tbl.row(this).data();
+        if (!data) return;
+        var comp = data[compoundCol];
+        if (!comp) return;
+        pushCompound(comp);
+      });
+
+      // After any table redraw (sort, search, filter): update to new first row
+      tbl.on('draw', function() {
+        var d = tbl.row({search:'applied'}).data();
+        if (d && d[compoundCol]) pushCompound(d[compoundCol]);
+      });
+    }
+  ")
+
+# Render the table in the dashboard panel
+comp_dt
+```
+
+### Dose-Point-Level Table
+
+```{r}
+# ============================================================
+# DOSE-LEVEL DATA TABLE
+#
+# Displays one row per compound × dose, showing CTG and ML metrics 
+# for each individual dose point. This table responds to the same 
+# crosstalk filters as the compound table via the shared "drug" group.
+#
+# Uses the same extensions as the compound table but with 3 fixed 
+# columns (compound name + dose are needed for context when scrolling).
+# No onRender() callback here as this table doesn't control the images.
+# ============================================================
+datatable(
+  disp_well_shared, 
+  extensions = c('Buttons', 'Scroller', "FixedColumns"), 
+  rownames = FALSE,
+  options = list(
+    dom = 'Brft',   # No 'i' info text (row count) to save vertical space
+    columnDefs = list(list(className = 'dt-center', targets = "_all")),
+    pageLength = 50,
+    buttons = list(
+      list(extend = 'copyHtml5', text = "Copy to Clipboard"),
+      list(extend = 'excel',
+           filename = paste0(prefix, "_Hits_PerWell_Data_", c), 
+           title = NULL)),
+    searching = TRUE,
+    scrollX = TRUE,
+    paging = TRUE,
+    fixedColumns = list(leftColumns = 3)   # Fix Compound_Name, Conc, and one more column
+  )
+)
+```
+
+Column
+-----------------------------------------------------------------------
+
+### Compound-Level Plot
+
+```{r}
+# ============================================================
+# SCATTER PLOT — ML Relative AUC vs CTG Robust Z-score
+#
+# This plot shows each compound as a single point, with:
+#   x-axis: ML Relative AUC (machine learning predicted viability 
+#            as a fold-change to DMSO control; 1 = no effect)
+#   y-axis: CTG AUC Robust Z-score (statistical measure of how 
+#            different the CTG viability is from the plate median)
+#
+# Points are coloured by compound name. Because the number of 
+# compounds is typically large, the legend is present but the 
+# main purpose of the colour is to help track individual compounds 
+# when hovering or after filtering, not to distinguish all at once.
+#
+# The plot is linked to data_comp_shared so it responds to the 
+# sidebar filters — compounds filtered out are hidden from the plot.
+# ============================================================
+
+# --- Pull the first compound name (for the image panel default) ---
+first_compound <- analysed_data_comp %>%
+  dplyr::pull(Compound_Name) %>%
+  unique() %>%
+  .[1]   # .[1] extracts the first element of the vector
+
+# --- Calculate dynamic axis limits ---
+# The y-axis (Z-score) limits are calculated from the data rather than 
+# hard-coded, ensuring the plot scales correctly regardless of the 
+# range of values in any particular dataset.
+#
+# The minimum y-axis limit is at least -5 (even if no Z-score is below -5),
+# and the maximum is at least +5. This provides a reasonable baseline scale
+# while expanding further if the data requires it.
+# floor() and ceiling() round down/up to the nearest integer.
+max_lim_AUC_z <- analysed_data_comp %>% 
+  summarise(value = max(Robust_ZScore_AUC, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value < 5, 5, value + 1),  
+         value = ceiling(value)) %>%                 
+  pull(value)
+
+min_lim_AUC_z <- analysed_data_comp %>% 
+  summarise(value = min(Robust_ZScore_AUC, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value > -5, -5, value + 1),  
+         value = floor(value)) %>%                      
+  pull(value)
+
+# Fixed x-axis limits for ML Relative AUC (0 = no cells, 1 = DMSO-equivalent)
+max_lim_rAUC <- 1.2
+min_lim_rAUC <- 0
+
+# --- Build the scatter plot ---
+comp_dot_plotly <- data_comp_shared %>%
+  plot_ly(., 
+          x = ~ML_Relative_AUC,       # x-axis: ML predicted viability
+          y = ~Robust_ZScore_AUC,     # y-axis: CTG Z-score
+          color = ~Compound_Name,     # One colour per compound
+          legendgroup = ~Compound_Name,
+          text = ~Compound_Name,
+          type = 'scatter',
+          mode = 'markers',
+          marker = list(opacity = 0.8),  # Slight transparency helps with overlapping points
+          hovertemplate = ~paste0(
+            "<b>", Compound_Name, "</b>",
+            '<br>CTG AUC Robust Z-score: ', Robust_ZScore_AUC,
+            '<br>CTG Relative AUC: ', Relative_AUC, 
+            '<br>ML Relative AUC: ', ML_Relative_AUC,
+            "<extra></extra>"   # Suppresses the default plotly trace name box
+          )) %>%
+  
+  # --- Axis and plot layout ---
+  layout(
+    xaxis = list(
+      title = "ML predicted viability AUC (Fold Change to DMSO)", 
+      titlefont = list(size = 13.5),
+      range = c(min_lim_rAUC, max_lim_rAUC),
+      tickvals = seq(min_lim_rAUC, max_lim_rAUC, by = 0.5),
+      showline = TRUE,
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      title = "AUC Robust Z-score",
+      titlefont = list(size = 13.5),
+      range = c(min_lim_AUC_z, max_lim_AUC_z),
+      tickvals = seq(from = ceiling(min_lim_AUC_z / 5) * 5,
+                     to   = floor(max_lim_AUC_z / 5) * 5,
+                     by   = 5),
+      showline = TRUE
+    ),
+    legend = list(title = list(text = "Colour: Compound\n")),
+    margin = list(t = 30, r = 40, b = 65, l = 65),
+    plot_bgcolor = "white"   
+  ) %>% 
+  
+  # --- Reference lines ---
+  # Added as layout 'shapes' so they appear as fixed lines behind the data,
+  # without creating legend entries.
+  layout(shapes = list(
+    list(type = "line",
+         x0 = 1, x1 = 1,
+         y0 = min_lim_AUC_z, y1 = max_lim_AUC_z,
+         line = list(dash = "dot", color = "black", width = 0.6)),
+    list(type = "line",
+         x0 = min_lim_rAUC, x1 = max_lim_rAUC,
+         y0 = -2, y1 = -2,
+         line = list(dash = "dot", color = "black", width = 0.6)),
+    list(type = "line",
+         x0 = min_lim_rAUC, x1 = max_lim_rAUC,
+         y0 = 2, y1 = 2,
+         line = list(dash = "dot", color = "black", width = 0.6))
+  )) 
+
+comp_dot_plotly
+```
+
+### Endpoint Images
+
+<!-- Static Markdown text explaining the image panel. -->
+
+Use the plot above to select a compound of interest. Double-click on the data point and the corresponding brightfield and DAPI images for each concentration will be shown below. The 0.2% DMSO control is from plate 1 well B16.
+
+```{r}
+# ============================================================
+# DYNAMIC IMAGE PANEL
+#
+# This panel displays microscopy images for a selected compound.
+# It has two sections:
+#
+#   LEFT:  Two static DMSO control images (brightfield + DAPI), 
+#          which never change — they are always the same reference images.
+#
+#   RIGHT: Six dynamic compound images (brightfield + DAPI at three 
+#          doses: 0.1µM, 1µM, 10µM), which update when the user clicks 
+#          a compound in the table above or double-clicks the plot.
+#
+# HOW THE IMAGES ARE STRUCTURED:
+# Image files are stored in a subfolder called "Cell_LineX_dashboard/".
+# Brightfield images are named: CompoundName_DoseuM.jpeg
+# DAPI images are named:        CompoundName_DoseuM_DAPI.jpeg
+#
+# HOW THE UI IS BUILT:
+# htmltools::tagList() groups multiple HTML tags into a single output.
+# htmltools::tags$div() creates HTML <div> containers.
+# htmltools::tags$img() creates HTML <img> elements.
+# CSS flexbox (display:flex) is used for layout throughout:
+#   - The outer div is a horizontal row (image columns side by side)
+#   - The left div has two images stacked vertically (DMSO BF + DAPI)
+#   - The right div has two rows, each with three images side by side
+#
+# lapply() is used to generate the three repeated image slots per row.
+# It takes a list of configurations (label text + img element ID) and 
+# applies the same function to each, creating three identical-structured 
+# <div> elements without repeating the HTML code manually.
+#
+# HOW THE DYNAMIC UPDATES WORK (JavaScript):
+# The <script> block at the bottom defines a global function 
+# window.updateCompoundImages(compound) that:
+#   1. Constructs the expected image file path from the compound name and dose
+#   2. Updates the src attribute of each <img> element to load the new image
+#   3. Sets an onerror handler so if an image file doesn't exist, a 
+#      "missing image" placeholder is shown instead of a broken image icon
+#
+# sprintf() embeds the first compound name into the JS at knit time 
+# so the images load immediately on page open without waiting for a 
+# table click (the %s is replaced with first_compound).
+#
+# The compound table's onRender() callback (above) calls 
+# window.updateCompoundImages() whenever a row is clicked or the 
+# table is redrawn, keeping the image panel in sync with the table.
+# ============================================================
+
+doses <- c("0.1", "1", "10")
+first_compound <- disp_data_comp$Compound_Name[1]   # Used to pre-load images on page open
+
+htmltools::tagList(
+  
+  # --- Outer container: full image panel, fixed height, horizontal layout ---
+  htmltools::tags$div(
+    style = "height:280px; overflow:hidden; display:flex; gap:12px;",
+
+    # ===== LEFT SECTION: Static DMSO control images =====
+    # Fixed width of 25%; two images stacked vertically with flex-direction:column
+    htmltools::tags$div(
+      style = "width:25%; display:flex; flex-direction:column; gap:12px; overflow:hidden;",
+
+      # DMSO brightfield image (static — same file always loaded)
+      htmltools::tags$div(
+        style = "flex:1; display:flex; flex-direction:column; overflow:hidden; text-align:center;",
+        htmltools::tags$div("DMSO – Brightfield", style = "font-weight:600; margin-bottom:4px;"),
+        htmltools::tags$img(
+          src   = "Cell_LineX_dashboard/DMSO_0.2%.jpeg",
+          style = "flex:1; max-width:100%; max-height:100%; object-fit:contain;"
+          # object-fit:contain scales the image to fit without cropping
+        )
+      ),
+
+      # DMSO DAPI image (static)
+      htmltools::tags$div(
+        style = "flex:1; display:flex; flex-direction:column; overflow:hidden; text-align:center;",
+        htmltools::tags$div("DMSO – DAPI", style = "font-weight:600; margin-bottom:4px;"),
+        htmltools::tags$img(
+          src   = "Cell_LineX_dashboard/DMSO_0.2%_DAPI.jpeg",
+          style = "flex:1; max-width:100%; max-height:100%; object-fit:contain;"
+        )
+      )
+    ),
+
+    # ===== RIGHT SECTION: Dynamic compound images =====
+    # Takes the remaining space (flex:1); two horizontal rows (BF + DAPI)
+    htmltools::tags$div(
+      style = "flex:1; display:flex; flex-direction:column; gap:12px; overflow:hidden;",
+
+      # --- Row 1: Brightfield images at 0.1µM, 1µM, 10µM ---
+      # lapply() generates three <div> blocks from the list of label/ID pairs,
+      # avoiding repetition. Each list element contains: label text, img element ID.
+      htmltools::tags$div(
+        style = "flex:1; display:flex; gap:12px; overflow:hidden;",
+        lapply(
+          list(
+            list("0.1 µM – Brightfield", "compound-image-bf-1"),
+            list("1 µM – Brightfield",   "compound-image-bf-2"),
+            list("10 µM – Brightfield",  "compound-image-bf-3")
+          ),
+          function(x)
+            htmltools::tags$div(
+              style = "width:33%; display:flex; flex-direction:column; overflow:hidden; text-align:center;",
+              htmltools::tags$div(x[[1]], style = "font-weight:600; margin-bottom:4px;"),  # Label
+              htmltools::tags$img(
+                id    = x[[2]],   # Unique ID targeted by the JS below to update src
+                style = "flex:1; max-width:100%; max-height:100%; object-fit:contain;"
+              )
+            )
+        )
+      ),
+
+      # --- Row 2: DAPI images at 0.1µM, 1µM, 10µM ---
+      htmltools::tags$div(
+        style = "flex:1; display:flex; gap:12px; overflow:hidden;",
+        lapply(
+          list(
+            list("0.1 µM – DAPI", "compound-image-dapi-1"),
+            list("1 µM – DAPI",   "compound-image-dapi-2"),
+            list("10 µM – DAPI",  "compound-image-dapi-3")
+          ),
+          function(x)
+            htmltools::tags$div(
+              style = "width:33%; display:flex; flex-direction:column; overflow:hidden; text-align:center;",
+              htmltools::tags$div(x[[1]], style = "font-weight:600; margin-bottom:4px;"),
+              htmltools::tags$img(
+                id    = x[[2]],
+                style = "flex:1; max-width:100%; max-height:100%; object-fit:contain;"
+              )
+            )
+        )
+      )
+    )
+  ),
+
+  # ===== JAVASCRIPT: Global image update function =====
+  # sprintf() is an R function that works like a template — the %s placeholder 
+  # is replaced with the value of first_compound at knit time. This embeds the 
+  # first compound name directly into the JavaScript string so the images load 
+  # immediately when the page opens, without waiting for a user interaction.
+  htmltools::tags$script(
+    htmltools::HTML(sprintf("
+      (function() {
+        // Path to the placeholder shown when an image file is missing
+        var placeholder = 'Cell_LineX_dashboard/missing_image.jpeg';
+        // Folder where all compound images are stored
+        var base  = 'Cell_LineX_dashboard/';
+        // The three dose levels (must match the actual filename format)
+        var doses = ['0.1', '1', '10'];
+
+        // --- Helper: update one row of images (brightfield or DAPI) ---
+        // compound: the compound name (used to build the file path)
+        // ids:      array of HTML img element IDs to update
+        // suffix:   '' for brightfield, '_DAPI' for DAPI images
+        function updateRow(compound, ids, suffix) {
+          doses.forEach(function(dose, i) {
+            var img = document.getElementById(ids[i]);
+            if (!img) return;
+
+            // Construct the expected file path for this compound, dose, and image type
+            var src = base + compound + '_' + dose + 'uM' + suffix + '.jpeg';
+
+            // If the file doesn't exist, load the placeholder image instead
+            // 'this.onerror = null' prevents infinite error loops
+            img.onerror = function() {
+              this.onerror = null;
+              this.src = placeholder;
+              this.title = compound + ' – ' + dose + ' µM (image missing)';
+            };
+
+            // Set the image source — the browser will fetch and display the file
+            img.src = src;
+            img.title = compound + ' – ' + dose + ' µM';
+          });
+        }
+
+        // --- Global function called by the compound table's onRender() callback ---
+        // This is attached to 'window' (the global browser scope) so it can be 
+        // called from any other JavaScript on the page, including the table's 
+        // onRender() callback defined in the compound table chunk above.
+        window.updateCompoundImages = function(compound) {
+          if (!compound) return;
+
+          // Update brightfield row (no suffix)
+          updateRow(
+            compound,
+            ['compound-image-bf-1', 'compound-image-bf-2', 'compound-image-bf-3'],
+            ''
+          );
+
+          // Update DAPI row ('_DAPI' suffix in filename)
+          updateRow(
+            compound,
+            ['compound-image-dapi-1', 'compound-image-dapi-2', 'compound-image-dapi-3'],
+            '_DAPI'
+          );
+        };
+
+        // Pre-load images for the first compound on page open.
+        // The compound name is injected by R's sprintf() at knit time.
+        window.updateCompoundImages('%s');
+      })();
+    ", first_compound))
+  )
+)
+```

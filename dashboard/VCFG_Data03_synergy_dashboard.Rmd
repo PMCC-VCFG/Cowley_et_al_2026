@@ -1,0 +1,1667 @@
+---
+# ============================================================
+# YAML HEADER
+# This block controls the overall appearance and layout of the 
+# dashboard. It is not R code — it is read by the flexdashboard 
+# package when knitting the document.
+# ============================================================
+
+title: "VCFG Dataset 3: Synergy Drug Interaction Screen"   # Title shown in the navbar
+output: 
+  flexdashboard::flex_dashboard:
+    theme:                      # Custom colour theme using Bootstrap Sass variables
+      bg: "white"               # Background colour of the dashboard
+      fg: "#3c2372"             # Foreground (text) colour — a dark purple
+      primary: "#3c2372"        # Primary accent colour (buttons, active elements)
+      secondary: "#3c2372"      # Secondary accent colour
+      success: "#3c2372"        # Colour for "success" state elements
+    orientation: columns        # Panels are arranged side-by-side in columns (vs rows)
+    vertical_layout: fill       # Panels expand to fill the full height of the browser
+---
+
+<!-- ============================================================
+  CSS STYLING BLOCK
+  Raw HTML/CSS injected directly into the dashboard. This customises
+  the appearance of specific elements beyond what the YAML theme covers.
+  Each section targets a different part of the UI.
+  ============================================================ -->
+
+<style type="text/css">
+
+/* ---------------------------------------------------------
+   Chart Panel Titles
+   The text shown above each panel in the dashboard.
+   --------------------------------------------------------- */
+
+.chart-title {  
+  font-size: 19px;
+  font-weight: bold;
+  color: #3c2372;   /* Match the dashboard's purple theme colour */
+}
+
+/* ---------------------------------------------------------
+   ionRangeSlider (the interactive slider filter widgets)
+   The slider is created by the crosstalk filter_slider() function.
+   These rules customise its colours and hide default labels that
+   would otherwise clutter the UI.
+   --------------------------------------------------------- */
+
+.irs-grid-text {
+  color: #3c2372;
+  display: none !important;   /* Hide the numeric grid labels beneath the slider */
+}
+
+.irs-bar {
+  background-color: #3c2372; /* Purple fill for the selected range */
+  border: 1px solid #3c2372;
+}
+
+.irs-slider {
+  background: #3c2372 !important;   /* The draggable handle colour */
+  border: 2px solid #3c2372;
+  width: 10px !important;           /* Smaller handle for a cleaner look */
+  height: 10px !important;
+  top: 25px !important;             /* Vertical position of the handle */
+}
+
+/* The value label shown above the slider handle */
+.irs-single {
+  font-size: 14px !important;
+  font-weight: bold;
+  top: -4px !important;   /* Move the label up slightly */
+  color: #3c2372;
+}
+
+/* The range labels shown when a range (not single value) is selected */
+.irs-from, .irs-to {
+  font-size: 14px !important;
+  font-weight: bold;
+  top: -4px !important;
+  color: #3c2372;
+}
+
+/* Hide the absolute min/max endpoint labels */
+.irs-min, .irs-max {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------
+   Navbar (the top navigation bar)
+   Controls height and vertical alignment of the nav elements.
+   This dashboard has multiple pages (ZIP and Bliss), so the 
+   navbar contains page navigation links in addition to the title.
+   --------------------------------------------------------- */
+
+.navbar {
+  min-height: 50px !important;
+  height: 50px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Align the navbar brand (the dashboard title) vertically */
+.navbar-brand {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+  line-height: 20px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  vertical-align: middle !important;
+}
+
+/* Align the nav link list vertically */
+.navbar-nav {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.navbar-nav > li {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+}
+
+/* Style individual nav links — white text, no border, flex-aligned */
+.navbar-nav > li > a {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  line-height: 20px !important;
+  height: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  font-weight: normal !important;
+  text-decoration: none !important;
+}
+
+/* Hover state — subtle opacity reduction */
+.navbar-nav > li > a:hover {
+  background: none !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  text-decoration: none !important;
+}
+
+/* Underline the currently active page tab.
+   Multiple selectors are used because flexdashboard applies the 
+   active class inconsistently across different versions. */
+.navbar-nav > li.active > a,
+.navbar-nav > .active > a,
+.navbar-nav > li > a.active,
+.navbar-nav > li[class*="active"] > a {
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  text-decoration: underline !important;
+  font-weight: normal !important;
+}
+
+/* Hover state for the active page link */
+.navbar-nav > li.active > a:hover,
+.navbar-nav > .active > a:hover,
+.navbar-nav > li > a.active:hover,
+.navbar-nav > li[class*="active"] > a:hover {
+  background: none !important;
+  border: none !important;
+  color: white !important;
+  text-decoration: underline !important;
+}
+
+/* Align the navbar header (the container holding brand + nav) */
+.navbar-header {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+}
+
+/* ---------------------------------------------------------
+   Layout Spacing
+   Reduces default padding/margins so the dashboard content
+   fills more of the available screen space.
+   --------------------------------------------------------- */
+
+body {
+  padding-top: 0 !important;   /* No gap below the navbar */
+}
+
+.container-fluid {
+  padding-top: 2px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  margin: 0 !important;
+  width: 100% !important;   /* Use full browser width */
+}
+
+.row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
+/* Tighten column gutters */
+.col-md-4, .col-md-8 {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+/* Tighten bottom spacing on all chart-related elements */
+.section.level3 {
+  margin-bottom: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.chart-wrapper {
+  margin-bottom: 5px !important;
+}
+
+.chart-stage {
+  margin-bottom: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.html-widget {
+  margin-bottom: 5px !important;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+# ============================================================
+# SETUP CHUNK
+# 'include=FALSE' means this chunk runs silently — its code and
+# output are NOT shown in the final dashboard.
+#
+# Here we:
+#   1. Load all required R packages
+#   2. Set a filename prefix, cell line, and anchor drug variable
+#   3. Apply a global option to suppress scientific notation
+# ============================================================
+
+# --- Load packages ---
+library(data.table)      # Fast data manipulation (used here mainly for compatibility)
+library(DT)              # Creates interactive HTML data tables (DataTables.js)
+library(drc)             # Dose-response curve fitting (4-parameter logistic models)
+library(synergyfinder)   # Synergy analysis tools (ZIP, Bliss, HSA, Loewe models);
+                         # used upstream to generate the synergy score files read in below
+library(patchwork)       # Combines multiple ggplot2 plots (loaded for compatibility)
+library(tidyverse)       # Core data science packages: dplyr, ggplot2, readr, tidyr, etc.
+library(flexdashboard)   # Turns R Markdown into an interactive web dashboard
+library(crosstalk)       # Enables linked filtering across multiple HTML widgets
+library(plotly)          # Creates interactive, web-based plots
+
+# --- Set filename prefix ---
+prefix <- "VCFG_Data03"
+
+# --- Set the cell line ---
+c <- "Cell_LineX"
+
+# --- Set the anchor compound name ---
+# The anchor is the fixed compound tested in combination with each 
+# test compound. Stored as a variable for use in labels and file names.
+anchor <- "Anchor"
+
+# --- Suppress scientific notation ---
+# This forces use of decimals to improve readability
+options(scipen = 999)
+```
+
+
+```{r original data, include=TRUE}
+# ============================================================
+# DATA IMPORT
+#
+# Five CSV files are read in, each containing a different level 
+# of the synergy analysis output:
+#
+#   synergy_summary:  One row per compound × synergy model.
+#                     Contains overall summary statistics for each 
+#                     drug pair across the full dose-response matrix
+#                     (mean synergy score, max synergy score, p-value, CSS, IC50s).
+#
+#   drug_pairs:       Lookup table linking each block_id (a unique 
+#                     identifier for each compound combination) to the 
+#                     drug names and concentration units.
+#
+#   synergy_scores:   One row per block_id × dose combination × synergy model.
+#                     Contains the synergy score at each individual 
+#                     dose point in the matrix.
+#
+#   response_data:    One row per block_id × dose combination.
+#                     Contains the observed % inhibition response at each dose.
+#
+#   data_norm:        One row per well (compound × dose × anchor dose).
+#                     Contains normalised cell count data used to fit and 
+#                     display the dose-response curves.
+# ============================================================
+
+synergy_summary <- read.csv(paste0("../data/VCFG_Data03/", prefix, "_synergy_summary.csv"))
+drug_pairs      <- read.csv(paste0("../data/VCFG_Data03/", prefix, "_drug_pairs.csv"))
+synergy_scores  <- read.csv(paste0("../data/VCFG_Data03/", prefix, "_synergy_scores.csv"))
+response_data   <- read.csv(paste0("../data/VCFG_Data03/", prefix, "_response_data.csv"))
+data_norm       <- read.csv(paste0("../data/VCFG_Data03/", prefix, "_data_norm.csv"))
+
+
+# ============================================================
+# SUMMARY-LEVEL DATA PREPARATION (syn_summary_long)
+#
+# RESHAPING STEPS:
+#   1. pivot_longer(): Collapse all model-specific columns into two 
+#      columns: 'column' (original column name) and 'value' (its value).
+#      The id columns (first 5 and last 7) are excluded from pivoting.
+#   2. separate(): Split 'column' into 'Model' (e.g. "ZIP") and 
+#      'Var' (e.g. "synergy_mean") using "_" as the separator.
+#      'extra = "merge"' keeps everything after the first "_" together 
+#      in Var, so "synergy_p_value" is not split further.
+#   3. pivot_wider(): Reshape back so each Var becomes its own column,
+#      giving one row per compound × model with tidy named columns.
+#
+# BINNING:
+# Columns are binned to create slider-friendly versions
+# ============================================================
+
+syn_summary_long <- synergy_summary %>% 
+  pivot_longer(cols = c(colnames(synergy_summary[-c(1:5, 18:24)])),
+               names_to = "column") %>% 
+  separate(column, into = c("Model", "Var"), sep = "_", extra = "merge") %>% 
+  mutate(Model = factor(Model, levels = c("ZIP", "HSA", "Bliss", "Loewe"))) %>% 
+  pivot_wider(names_from = Var, values_from = value) %>% 
+  arrange(drug1, Model) %>%
+  mutate(
+    synergy_mean_bin = case_when(
+      synergy_mean <= -18                          ~ -18,
+      synergy_mean <= -16 & synergy_mean > -18     ~ -16,
+      synergy_mean <= -14 & synergy_mean > -16     ~ -14,
+      synergy_mean <= -12 & synergy_mean > -14     ~ -12,
+      synergy_mean <= -10 & synergy_mean > -12     ~ -10,
+      synergy_mean <= -8  & synergy_mean > -10     ~ -8,
+      synergy_mean <= -6  & synergy_mean > -8      ~ -6,
+      synergy_mean <= -4  & synergy_mean > -6      ~ -4,
+      synergy_mean <= -2  & synergy_mean > -4      ~ -2,
+      synergy_mean <= 0   & synergy_mean > -2      ~ 0,
+      synergy_mean > 0    & synergy_mean < 2       ~ 0,
+      synergy_mean >= 2   & synergy_mean < 4       ~ 2,
+      synergy_mean >= 4   & synergy_mean < 6       ~ 4,
+      synergy_mean >= 6   & synergy_mean < 8       ~ 6,
+      synergy_mean >= 8   & synergy_mean < 10      ~ 8,
+      synergy_mean >= 10                           ~ 10
+    ),
+    synergy_max_bin = case_when(
+      synergy_max < 2                              ~ 0,
+      synergy_max >= 2  & synergy_max < 4          ~ 2,
+      synergy_max >= 4  & synergy_max < 6          ~ 4,
+      synergy_max >= 6  & synergy_max < 8          ~ 6,
+      synergy_max >= 8  & synergy_max < 10         ~ 8,
+      synergy_max >= 10 & synergy_max < 12         ~ 10,
+      synergy_max >= 12 & synergy_max < 14         ~ 12,
+      synergy_max >= 14 & synergy_max < 16         ~ 14,
+      synergy_max >= 16 & synergy_max < 18         ~ 16,
+      synergy_max >= 18 & synergy_max < 20         ~ 18,
+      synergy_max >= 20 & synergy_max < 22         ~ 20,
+      synergy_max >= 22 & synergy_max < 24         ~ 22,
+      synergy_max >= 24 & synergy_max < 26         ~ 24,
+      synergy_max >= 26 & synergy_max < 28         ~ 26,
+      synergy_max >= 28 & synergy_max < 30         ~ 28,
+      synergy_max >= 30 & synergy_max < 32         ~ 30,
+      synergy_max >= 32 & synergy_max < 34         ~ 32,
+      synergy_max >= 34 & synergy_max < 36         ~ 34,
+      synergy_max >= 36 & synergy_max < 38         ~ 36,
+      synergy_max >= 38 & synergy_max < 40         ~ 38,
+      synergy_max >= 40                            ~ 40
+    ),
+    css_bin = case_when(
+      css < 5                       ~ 0,
+      css >= 5  & css < 10          ~ 5,
+      css >= 10 & css < 15          ~ 10,
+      css >= 15 & css < 20          ~ 15,
+      css >= 20 & css < 25          ~ 20,
+      css >= 25 & css < 30          ~ 25,
+      css >= 30 & css < 35          ~ 30,
+      css >= 35 & css < 40          ~ 35,
+      css >= 40 & css < 45          ~ 40,
+      css >= 45 & css < 50          ~ 45,
+      css >= 50 & css < 55          ~ 50,
+      css >= 55 & css < 60          ~ 55,
+      css >= 60 & css < 65          ~ 60,
+      css >= 65 & css < 70          ~ 65,
+      css >= 70                     ~ 70
+    )
+  ) %>% 
+  select(Model, drug1, drug2, conc_unit1, conc_unit2,
+         synergy_matrix_max      = synergy_max,
+         synergy_matrix_mean     = synergy_mean,
+         synergy_matrix_p_value  = synergy_p_value,
+         css, ic50_drug1, ic50_drug2, ri_drug1, ri_drug2,
+         css_drug1_ic50_drug2, css_drug2_ic50_drug1,
+         contains("_bin"))  
+
+# ============================================================
+# DOSE-LEVEL DATA PREPARATION (syn_stats_long)
+#
+# STEPS:
+#   1. Join drug_pairs (compound names and units) onto synergy_scores 
+#      (dose-level synergy scores) using block_id as the shared key.
+#      inner_join() keeps only rows that appear in BOTH tables.
+#   2. Pivot to long format, then separate model from variable name
+#      (same approach as syn_summary_long above).
+#   3. Join onto response_data to add the observed % inhibition at 
+#      each dose point.
+#   4. Round all numeric columns (except the first 7 identifier columns)
+#      to 3 decimal places using mutate_at(-c(1:7), round, 3).
+# ============================================================
+
+syn_stats_lab <- drug_pairs %>% 
+  select(block_id, drug1, drug2, conc_unit1, conc_unit2) %>% 
+  inner_join(., synergy_scores, by = "block_id")  # Match synergy scores to compound info
+
+syn_stats_long <- syn_stats_lab %>% 
+  pivot_longer(cols = colnames(syn_stats_lab[-c(1:7)]),
+               names_to = "column") %>% 
+  separate(column, into = c("Model", "Var"), sep = "_", extra = "merge") %>% 
+  mutate(Model = factor(Model, levels = c("ZIP", "HSA", "Bliss", "Loewe"))) %>% 
+  pivot_wider(names_from = Var, values_from = value) %>% 
+  arrange(desc(conc2), conc1) %>%
+  
+  # Add the observed % inhibition response for each dose combination
+  inner_join(., response_data, by = c("block_id", "conc1", "conc2")) %>%
+  rename(synergy_dose  = synergy,
+         ref_dose      = ref,
+         response_dose = response) %>% 
+  select(Model, drug1, drug2, conc1, conc2, conc_unit1, conc_unit2,
+         contains(c("ref_dose", "synergy_dose")),
+         response_dose) %>%
+  arrange(drug1, desc(conc1), conc2, Model) %>% 
+  mutate_at(-c(1:7), round, 3)
+```
+
+<!-- ============================================================
+  MULTI-PAGE LAYOUT
+  In flexdashboard, a line of equals signs (=====) creates a new 
+  PAGE (tab) in the navbar. Each page is completely independent 
+  with its own set of panels, filters, and shared data objects.
+  
+  This dashboard has two pages, one per synergy model:
+    - ZIP (Zero Interaction Potency)
+    - Bliss Independence
+  
+  Each page follows an identical structure. The key difference 
+  between pages is that each has its own set of SharedData objects 
+  with unique group names (e.g. "drug2_zip" vs "drug2_bliss") to 
+  prevent filters on one page from interfering with the other.
+  ============================================================ -->
+
+ZIP 
+=======================================================================
+
+```{r shared data ZIP, include=TRUE}
+# ============================================================
+# PAGE-LEVEL DATA PREPARATION AND SHARED DATA — ZIP MODEL
+#
+# At the top of each page, the full summary and dose-level datasets 
+# are filtered to the current model (s = "ZIP") and prepared for display.
+# This same block of code is repeated on each page with a different 
+# model name and unique shared data group names.
+#
+# THREE TYPES OF DATA ARE PREPARED:
+#
+#   1. syn_matrix_long_filt:  Compound-level summary for this model only.
+#                             Used for the scatter plot and synergy table filters.
+#                             A p_sig column is added to classify compounds as 
+#                             "Significant" or "Not Significant" based on whether 
+#                             the synergy p-value is below 0.05.
+#
+#   2. syn_dose_long_filt:    Dose-level synergy and response data for this model.
+#                             Used for the heatmap matrix plots.
+#
+#   3. compound_data:         Normalised cell count data from data_norm.
+#                             Used for the dose-response curve plot.
+#                             conc1 (anchor concentration) is converted to an 
+#                             ordered factor so it appears in the correct order 
+#                             in the legend and plot colour scale.
+#                             conc2_log replaces zeros with a tiny value (0.00001) 
+#                             so that 0 concentration can be placed on a log scale.
+#                             Plotly's log axis then handles the actual log
+#                             transformation for display.
+#
+# DOSE-RESPONSE CURVE FITTING:
+# For the dose-response curve panel, smooth fitted lines are generated 
+# by fitting 4-parameter logistic (4PL) models to the compound data.
+#
+# The prediction grid (conc_grid) creates 200 evenly-spaced concentration 
+# values on a log10 scale from 10^-5 to 10^1. This gives smooth curves 
+# across the full tested range when plotted.
+#
+# group_modify() applies the model-fitting and prediction function to each 
+# compound × anchor dose group separately:
+#   - drm() fits the 4PL model
+#   - tryCatch() catches any fitting failures and returns NULL so the 
+#     script doesn't crash if a model can't be fitted
+#   - predict() generates the fitted values at each point in conc_grid
+#
+# ============================================================
+
+s <- "ZIP"   # Specify which synergy model this page covers
+
+syn_matrix_long_filt <- syn_summary_long %>% 
+  filter(Model == s) %>% 
+  mutate(
+    p_sig = case_when(synergy_matrix_p_value < 0.05 ~ "Significant",
+                      TRUE ~ "Not Significant"),
+    p_sig = factor(p_sig, levels = c("Significant", "Not Significant"))
+  )
+
+# --- Filter dose-level data to ZIP model only ---
+syn_dose_long_filt <- syn_stats_long %>% 
+  filter(Model == s) 
+
+# --- Prepare normalised cell count data for dose-response curve ---
+compound_data <- data_norm %>%
+  mutate(
+    conc1 = factor(conc1, 
+                   levels = c(1.6000, 0.1600, 0.0160, 0.0016, 0.0002, 0.0000),
+                   labels = c("1.6000", "0.1600", "0.0160", "0.0016", "0.0002", "0.0000")),
+    # Replace 0 concentration with a small positive value for log-scale plotting
+    conc2_log = ifelse(conc2 == 0, 0.00001, conc2),
+    Count_Cells_Norm = round(Count_Cells_Norm, 2)
+  )
+
+# --- Trimmed tables for display/download (remove internal-only columns) ---
+syn_matrix_disp <- syn_matrix_long_filt %>% 
+  select(-c(Model, p_sig, contains("_bin"))) %>%   
+  arrange(drug2)
+
+syn_dose_disp <- syn_dose_long_filt %>% 
+  select(-Model) %>% 
+  arrange(drug2)
+
+# --- Generate smooth dose-response curve predictions ---
+# Create a fine grid of 200 concentrations on a log10 scale 
+# from 10^-5 to 10^1 for plotting smooth fitted curves.
+conc_grid <- 10^seq(-5, 1, length.out = 200)
+
+# Fit a 4PL model and generate predictions for each compound × anchor dose group.
+# group_modify() iterates over each group and applies the function to .x (that group's data).
+preds <- compound_data %>%
+  group_by(drug2, conc1) %>%
+  group_modify(~ {
+    # Fit a 4-parameter logistic dose-response model
+    model <- tryCatch(
+      drm(Count_Cells_Norm ~ conc2,
+          data = .x,
+          fct = L.4(names = c("slope", "lower", "upper", "ED50"))),
+      error = function(e) NULL   # Return NULL if fitting fails (avoids crashing)
+    )
+    if (is.null(model)) return(tibble())   # Skip this group if no model was fitted
+    
+    # Generate predicted cell counts at each point on the concentration grid
+    tibble(conc2 = conc_grid) %>%
+      mutate(
+        conc2_log = conc2,   # Plotly's log axis handles the log transformation
+        Count_Cells_Norm = predict(model, newdata = data.frame(conc2 = conc2))
+      )
+  }) %>%
+  ungroup()
+
+# Save predictions to file — avoids re-running slow model fitting on each knit
+# write_csv(preds, paste0("../output/", prefix, "_preds_", s, ".csv"))
+# To load pre-computed predictions instead of re-fitting, uncomment this line:
+# preds <- read_csv(paste0("../output/", prefix, "_preds_", s, ".csv"))
+```
+
+```{r}
+# ============================================================
+# CROSSTALK SHARED DATA OBJECTS — ZIP PAGE
+#
+# Crosstalk allows multiple HTML widgets to communicate with each 
+# other — when a filter is applied, all widgets sharing the same 
+# group update simultaneously.
+#
+# IMPORTANT: This dashboard has two pages (ZIP and Bliss). Each page 
+# must use UNIQUE group names for its SharedData objects. If two pages 
+# shared the same group name, filters on one page would incorrectly 
+# affect widgets on the other page.
+#
+# This page uses two distinct group namespaces:
+#   "drug2_zip"  : Links the synergy summary scatter plot and table.
+#                  Key = ~drug2 (test compound name).
+#                  Filtering here shows/hides compounds across the 
+#                  scatter plot, table, and slider/checkbox filters.
+#
+#   "dose_zip"   : Links the dose-response curve and heatmap plots.
+#                  Key = ~drug2.
+#                  The compound selector dropdown (filter_select) is 
+#                  linked to this group so selecting a compound 
+#                  updates both plots to show only that compound's data.
+#                  Note: compound_data and preds must share the SAME 
+#                  group and key as syn_dose_long_filt so that selecting 
+#                  a compound in the dropdown filters all three consistently.
+# ============================================================
+
+# For the synergy summary scatter plot and table filters
+syn_matrix_long_filt_shared_zip <- SharedData$new(syn_matrix_long_filt, group = "drug2_zip", key = ~drug2)
+
+# For the dose-response heatmap matrix
+syn_dose_long_filt_shared_zip   <- SharedData$new(syn_dose_long_filt,   group = "dose_zip",  key = ~drug2)
+
+# For the dose-response curve (raw points and fitted lines must share the same group)
+compound_data_shared_zip <- SharedData$new(compound_data, group = "dose_zip", key = ~drug2)
+preds_shared_zip         <- SharedData$new(preds,         group = "dose_zip", key = ~drug2)
+
+# Trimmed display/download tables (same groups as above so they respond to filters)
+syn_matrix_disp_shared_zip <- SharedData$new(syn_matrix_disp, group = "drug2_zip", key = ~drug2)
+syn_dose_disp_shared_zip   <- SharedData$new(syn_dose_disp,   group = "drug2_zip", key = ~drug2)
+```
+
+
+Column {data-width=275}
+-----------------------------------------------------------------------
+
+### Hit Identification Filters
+
+<!-- Static Markdown text explaining the synergy model and filter sections -->
+
+***Zero Interaction Potency (ZIP) Model*** <br>
+*Assumption: two non-interacting compounds should not significantly alter each other's dose-response curves when combined. Compares the experimental result to the expected effect of two compounds that do not potentiate each other. ZIP is a newer model that combines aspects of both Bliss and Loewe, making it more robust across different scenarios, but accuracy heavily relies on dose-response curve-fitting.* <br>
+
+***Test compound filter:*** <br>
+Use the drop-down menu to view the % inhibition and synergy dose-response matrix, and the dose-response curves at different doses of the test compound.
+
+```{r}
+# ============================================================
+# COMPOUND SELECTOR DROPDOWN
+#
+# filter_select() creates a searchable single-selection dropdown.
+# When the user selects a compound, the "dose_zip" group updates,
+# filtering the heatmap matrix and dose-response curve to show 
+# only data for that compound.
+#
+# multiple = FALSE: only one compound can be selected at a time,
+# which produces a dropdown rather than a multi-select widget.
+# This is important here because both plots are designed to show 
+# a single compound's data — plotting all compounds at once would 
+# produce an unreadable overlay.
+#
+# The JavaScript block immediately below pre-selects the first 
+# compound on page load so the plots display immediately.
+# ============================================================
+filter_select(
+  id = "plot_drug_filter1",   # Unique ID — must differ from filter IDs on other pages
+  label = "Select a test compound:",
+  sharedData = syn_dose_long_filt_shared_zip,
+  ~drug2,
+  multiple = FALSE
+)
+```
+
+```{js}
+// ============================================================
+// JAVASCRIPT: Pre-select the first compound on page load
+//
+// By default, filter_select() shows no selection (all compounds 
+// visible simultaneously), which would make the dose-response plots 
+// unreadable. This script selects the first compound automatically 
+// so the plots show meaningful data from the moment the page opens.
+//
+// It also removes the blank "" option (the "show all" option) from 
+// the dropdown so the user must always have exactly one compound 
+// selected.
+//
+// setTimeout(..., 100) adds a 100ms delay to ensure the selectize 
+// widget has fully initialised before we try to interact with it.
+// ============================================================
+$(document).ready(function() {
+  setTimeout(function() {
+    var selectElement = $("#plot_drug_filter1 .selectized").first();
+    if (selectElement.length) {
+      var selectize = selectElement[0].selectize;
+      
+      // Pre-select the first compound
+      selectize.setValue("Test_Compound01", false);
+      
+      // Remove the empty "" option (the "All" / blank default)
+      selectize.removeOption("");
+    }
+  }, 100);
+});
+```
+
+***Synergy score filters:*** <br>
+Synergy scores indicate the degree of interaction between two compounds. Negative values indicate **antagonism** and positive values indicate **synergy** (values around zero are more likely to indicate **additivity**).
+
+```{r}
+# ============================================================
+# SYNERGY SCORE SLIDERS
+#
+# Two sliders filter the compound-level synergy summary table and 
+# scatter plot based on mean and maximum synergy scores respectively.
+# Both are linked to syn_matrix_long_filt_shared_zip ("drug2_zip" group).
+#
+# The sliders use the binned columns (synergy_mean_bin, synergy_max_bin)
+# created during data prep rather than the raw scores. This ensures 
+# the slider moves in clean 2-unit steps rather than through many 
+# decimal place values.
+#
+# round = TRUE: Round the displayed slider value to the nearest integer
+# ticks = FALSE: Don't show tick marks below the slider track
+# ============================================================
+filter_slider(
+  id = "syn_filter1",
+  label = "Mean synergy score:",
+  sharedData = syn_matrix_long_filt_shared_zip,
+  ~synergy_mean_bin,
+  step = 0.1,
+  round = TRUE,
+  ticks = FALSE
+)
+```
+
+```{r}
+filter_slider(
+  id = "syn_filter2",
+  label = "Maximum synergy score:",
+  sharedData = syn_matrix_long_filt_shared_zip,
+  ~synergy_max_bin,
+  step = 0.1,
+  round = TRUE,
+  ticks = FALSE
+)
+```
+
+```{r}
+# ============================================================
+# P-VALUE SIGNIFICANCE CHECKBOX
+#
+# filter_checkbox() creates tick boxes for the p_sig column 
+# (classified as "Significant" or "Not Significant" in data prep).
+# Un-ticking "Not Significant" restricts the view to drug pairs 
+# where the synergy effect is statistically significant (p < 0.05).
+#
+# allLevels = TRUE: Always show both options even if one is 
+# currently empty after other filters have been applied.
+# ============================================================
+filter_checkbox(
+  id = "pval_filter1",
+  label = "Synergy p-value:",
+  sharedData = syn_matrix_long_filt_shared_zip,
+  ~p_sig,
+  allLevels = TRUE
+)
+```
+
+***Combination sensitivity score (CSS) filter:*** <br>
+Calculated based on the area under the dose–response curve of each drug while the other is fixed at its IC50 concentration. The CSS indicates the efficacy of a compound combination.
+
+```{r}
+# CSS slider uses the binned css_bin column
+filter_slider(
+  id = "css_filter1",
+  label = "CSS:",
+  sharedData = syn_matrix_long_filt_shared_zip,
+  ~css_bin,
+  step = 1,
+  round = TRUE,
+  ticks = FALSE
+)
+```
+
+<br>
+
+Column {data-width=700}
+-----------------------------------------------------------------------
+
+### Synergy score vs. Combined Sensitivity Score
+
+```{r}
+# ============================================================
+# SCATTER PLOTS — Mean and Maximum Synergy Score vs CSS
+#
+# Two scatter plots are created and stacked vertically using subplot():
+#   Top plot:    Mean synergy score (y) vs CSS (x)
+#   Bottom plot: Maximum synergy score (y) vs CSS (x)
+#
+# Both plots are linked to syn_matrix_long_filt_shared_zip so they 
+# respond to the sidebar filter widgets.
+#
+# Each point represents one test compound, coloured by compound name.
+# Point SIZE is mapped to synergy_matrix_p_value — larger points 
+# indicate higher (less significant) p-values, making the most 
+# statistically significant combinations visually smaller and 
+# easier to distinguish.
+#
+# DYNAMIC AXIS LIMITS:
+# Y-axis limits are calculated from the actual data rather than 
+# hard-coded. The minimum is at most -20 and the maximum at least +20,
+# expanding further if the data requires it.
+# $data() extracts the underlying dataframe from a SharedData object.
+#
+# REFERENCE LINE:
+# A dotted vertical line at x = 50 marks the midpoint of the CSS axis.
+# CSS > 50 generally indicates a combination with meaningful efficacy.
+# ============================================================
+
+# --- Calculate dynamic y-axis limits for the mean synergy plot ---
+syn_min <- syn_matrix_long_filt_shared_zip$data() %>% 
+  summarise(value = min(synergy_matrix_mean, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value > -20, -20, value - 5),  
+         value = round(value)) %>% 
+  pull(value)
+
+syn_max <- syn_matrix_long_filt_shared_zip$data() %>% 
+  summarise(value = max(synergy_matrix_mean, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value < 20, 20, value + 5),    
+         value = round(value)) %>% 
+  pull(value)
+
+# --- Top plot: Mean synergy score vs CSS ---
+ss_dot_mean_plotly <- syn_matrix_long_filt_shared_zip %>%
+  plot_ly(., 
+          x = ~css, 
+          y = ~synergy_matrix_mean,
+          color = ~drug2,               # One colour per test compound
+          legendgroup = ~drug2,
+          size = ~synergy_matrix_p_value,  # Larger point = higher (less sig) p-value
+          text = ~drug2,
+          type = 'scatter',
+          mode = 'markers',
+          marker = list(opacity = 0.8),
+          showlegend = FALSE,           # Legend shown only on the bottom plot
+          hovertemplate = ~paste0(
+            "<b>", drug2, "</b>",
+            '<br>Synergy mean: ', synergy_matrix_mean,
+            '<br>Synergy p-value: ', synergy_matrix_p_value,
+            '<br>CSS: ', css,
+            "<extra></extra>"           # Suppresses the default plotly trace name box
+          )) %>%
+  layout(
+    xaxis = list(title = "CSS (% Inhibition)", 
+                 range = c(0, 100),
+                 tickvals = seq(0, 100, by = 25),
+                 showline = TRUE,
+                 zeroline = FALSE),
+    yaxis = list(title = "Mean Synergy Score (% Inhibition)",
+                 range = c(syn_min, syn_max),
+                 tickvals = seq(syn_min, syn_max, by = 10),
+                 showline = TRUE),
+    legend = list(title = list(text = "Colour = Test Compound\nSize = Synergy p-value\n",
+                               font = list(size = 12.5)),
+                  font = list(size = 10.5),
+                  x = 1.05, y = 0.5),
+    margin = list(t = 30, r = 30, b = 65, l = 65),
+    plot_bgcolor = "white"
+  ) %>% 
+  layout(shapes = list(
+    # Dotted vertical reference line at CSS = 50
+    list(type = "line",
+         x0 = 50, x1 = 50,
+         y0 = syn_min, y1 = syn_max,
+         line = list(dash = "dot", color = "black", width = 0.6))
+  ))
+
+# --- Recalculate y-axis limits for the maximum synergy plot ---
+# Done separately because max synergy scores have a different range 
+# from mean scores and need their own axis limits.
+syn_min <- syn_matrix_long_filt_shared_zip$data() %>% 
+  summarise(value = min(synergy_matrix_max, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value > -20, -20, value - 5),
+         value = round(value)) %>% 
+  pull(value)
+
+syn_max <- syn_matrix_long_filt_shared_zip$data() %>% 
+  summarise(value = max(synergy_matrix_max, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value < 20, 20, value + 5),
+         value = round(value)) %>% 
+  pull(value)
+
+# --- Bottom plot: Maximum synergy score vs CSS ---
+# Same structure as the mean plot above; showlegend = TRUE here
+# so only one legend appears for the combined stacked figure.
+ss_dot_max_plotly <- syn_matrix_long_filt_shared_zip %>%
+  plot_ly(., 
+          x = ~css, 
+          y = ~synergy_matrix_max,
+          color = ~drug2,
+          legendgroup = ~drug2, 
+          size = ~synergy_matrix_p_value,
+          text = ~drug2,
+          type = 'scatter',
+          mode = 'markers',
+          marker = list(opacity = 0.8),
+          hovertemplate = ~paste0(
+            "<b>", drug2, "</b>",
+            '<br>Synergy max: ', synergy_matrix_max,
+            '<br>Synergy p-value: ', synergy_matrix_p_value,
+            '<br>CSS: ', css,
+            "<extra></extra>"
+          )) %>%
+  layout(
+    xaxis = list(title = "CSS (% Inhibition)", 
+                 range = c(0, 100),
+                 tickvals = seq(0, 100, by = 25),
+                 showline = TRUE,
+                 zeroline = FALSE),
+    yaxis = list(title = "Maximum Synergy Score (% Inhibition)",
+                 range = c(syn_min, syn_max),
+                 tickvals = seq(syn_min, syn_max, by = 10),
+                 showline = TRUE),
+    legend = list(title = list(text = "Colour = Test Compound\nSize = Synergy p-value\n",
+                               font = list(size = 12.5)),
+                  font = list(size = 10.5),
+                  x = 1.05, y = 0.5),
+    margin = list(t = 30, r = 30, b = 80, l = 65),
+    plot_bgcolor = "white"
+  ) %>% 
+  layout(shapes = list(
+    list(type = "line",
+         x0 = 50, x1 = 50,
+         y0 = syn_min, y1 = syn_max,
+         line = list(dash = "dot", color = "black", width = 0.6))
+  ))
+
+# --- Stack the two plots vertically ---
+# shareY = TRUE links the y-axes so zooming one plot zooms both.
+# titleX = TRUE shows the x-axis title on each subplot independently.
+# margin = 0.05 adds a small gap between the two plots.
+combined_plot_dot <- subplot(ss_dot_mean_plotly, ss_dot_max_plotly, 
+                             nrows = 2, 
+                             shareY = TRUE, 
+                             titleX = TRUE,
+                             margin = 0.05)
+
+combined_plot_dot
+```
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Single Combination Dose-Response Curves
+
+```{r, fig.width=8, fig.height=5}
+# ============================================================
+# DOSE-RESPONSE CURVE PLOT
+#
+# Displays dose-response curves for a single selected compound 
+# (chosen via the filter_select dropdown above). Each curve 
+# represents the effect of increasing the test compound (x-axis)
+# at a fixed dose of the anchor compound (coloured lines).
+#
+# The plot has two layers:
+#   1. Raw data points (add_markers): The actual measured cell counts
+#   2. Fitted 4PL curves (add_lines): Smooth curves from the model
+#
+# Both layers use the same colour palette (cols) and legendgroup, 
+# so each anchor concentration appears as a single legend entry 
+# that toggles both the points and the line simultaneously.
+#
+# showlegend = FALSE on the lines prevents duplicate legend entries —
+# the legend entry is owned by the marker layer.
+#
+# X-AXIS LOG SCALE:
+# type = "log" tells Plotly to display the x-axis on a log10 scale.
+# tickmode = "array" with tickvals and ticktext lets us specify 
+# exactly which values to label, so "0" appears for the 0 concentration
+# (which was replaced with 0.00001 in data prep to avoid log(0) errors).
+#
+# REFERENCE LINES:
+# Dotted horizontal lines at y = 0.5 (IC50 reference) and y = 1.0 
+# (DMSO control — no effect) help contextualise the curve positions.
+# ============================================================
+
+# Named colour palette: darker blues for higher anchor doses, grey for 0 (no anchor)
+cols <- c("1.6000" = "#08306b",   # Darkest blue — highest anchor dose
+          "0.1600" = "#08519c",    
+          "0.0160" = "#4292c6",   
+          "0.0016" = "#6baed6",    
+          "0.0002" = "#9ecae1",   # Lightest blue — lowest anchor dose
+          "0.0000" = "grey")      # Grey — no anchor (test compound alone)
+
+p <- plot_ly()
+
+# --- Layer 1: Raw measured data points ---
+p <- p %>%
+  add_markers(data = compound_data_shared_zip,
+              x = ~conc2_log,
+              y = ~Count_Cells_Norm,
+              color = ~conc1,
+              colors = cols,
+              marker = list(size = 8),
+              hovertemplate = ~paste0(
+                "<b>", drug2, " (uM): ", conc2, "</b>",
+                '<br>Anchor (uM): ', conc1,
+                "<br>Cell Count (FC to DMSO): ", round(Count_Cells_Norm, 2),
+                "<extra></extra>"
+              ),
+              name = ~conc1,
+              legendgroup = ~conc1,   # Group points and lines by anchor dose
+              showlegend = TRUE)      # Only show legend entry for this layer
+
+# --- Layer 2: Fitted 4PL dose-response curves ---
+p <- p %>%
+  add_lines(data = preds_shared_zip,
+            x = ~conc2_log,
+            y = ~Count_Cells_Norm,
+            color = ~conc1,
+            colors = cols,
+            line = list(width = 2),
+            hovertemplate = ~paste0(
+              "Cell Count (FC to DMSO): ", round(Count_Cells_Norm, 2),
+              "<extra></extra>"
+            ),
+            name = ~conc1,
+            legendgroup = ~conc1,    # Same group as markers — shares legend entry
+            showlegend = FALSE)      # Prevents duplicate legend entry
+
+# --- Axis and layout settings ---
+p <- p %>%
+  layout(
+    xaxis = list(
+      title = "Test Compound (uM)", 
+      type = "log",   # Log-scale x-axis — Plotly handles the log transformation
+      range = c(log10(0.0001), log10(2)),
+      tickmode = "array",
+      tickvals = c(0.0001, 0.001, 0.01, 0.1, 1),
+      ticktext = c("0", "0.001", "0.01", "0.1", "1")   # "0" labels the near-zero value
+    ),
+    yaxis = list(title = "Cell Count Fold Change to DMSO", 
+                 range = c(0, 1.5),
+                 tickvals = seq(0, 1.5, by = 0.25)),
+    shapes = list(
+      list(type = "line", 
+           x0 = min(compound_data$conc2_log), x1 = max(compound_data$conc2_log),
+           y0 = 0.5, y1 = 0.5, 
+           line = list(dash = "dot")),
+      list(type = "line", 
+           x0 = min(compound_data$conc2_log), x1 = max(compound_data$conc2_log),
+           y0 = 1.0, y1 = 1.0, 
+           line = list(dash = "dot"))
+    ),
+    legend = list(title = list(text = "Anchor (uM)"))
+  )
+p
+```
+
+### Hit Compounds - Synergy Data
+
+```{r}
+# ============================================================
+# SYNERGY SUMMARY DATA TABLE
+#
+# Displays the compound-level synergy summary statistics for the 
+# current model (ZIP). Linked to syn_matrix_long_filt_shared_zip 
+# via the "drug2_zip" group, so the table responds to the sidebar 
+# synergy score and CSS filter widgets.
+#
+# initComplete: A JavaScript callback run once when the table first 
+# renders. Used here to override the default font size for the table 
+# and the export buttons to be slightly smaller — keeping the table 
+# compact given the number of columns.
+#
+# initComplete runs after the DataTable is fully set up, giving access 
+# to the DataTable API (settings) and its JSON configuration (json).
+# $(this.api().table().node()) selects the table DOM element.
+# ============================================================
+datatable(
+  syn_matrix_disp_shared_zip, 
+  extensions = c('Buttons', 'Scroller', 'FixedColumns', 'ColReorder'), 
+  rownames = FALSE,
+  options = list(
+    dom = 'Brfti',
+    columnDefs = list(list(className = 'dt-center', targets = "_all")),
+    pageLength = 50,
+    buttons = list(
+      list(extend = 'copyHtml5', text = "Copy to Clipboard"),
+      list(extend = 'excel',
+           filename = paste0("VCFG_DoseResponseMatrix_SynergyData_Hits_", s, "_", c), 
+           title = NULL),
+      list(extend = 'colvis',
+           text = 'Show/Hide Columns')),
+    searching = TRUE,
+    scrollX = TRUE,
+    paging = TRUE,
+    fixedColumns = list(leftColumns = 2),
+    # Reduce font size of table and buttons on render for a more compact layout
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().node()).css('font-size', '13.5px');",
+      "$('.dt-buttons .btn').css({",
+      "'font-size': '13px',",
+      "'padding': '4px 4px',",
+      "});",
+      "}"
+    )
+  )
+)
+```
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Single Combination Dose-Response Matrix
+
+<!-- Static text explaining the two heatmap panels below. -->
+
+Use the top plot to view the **dose-response inhibition** data from the mean of the two replicates for each dose of the selected test compound with the anchor compound. The bottom plot shows the **calculated synergy score** for the selected test compound at each dose combination.
+
+```{r, fig.width=8, fig.height=5}
+# ============================================================
+# DOSE-RESPONSE MATRIX HEATMAPS
+#
+# Two heatmaps are created and stacked vertically using subplot():
+#   Top plot (inh_plot):  Observed % inhibition at each dose combination
+#   Bottom plot (ss_plot): Calculated synergy score at each dose combination
+#
+# Both heatmaps are linked to syn_dose_long_filt_shared_zip ("dose_zip" group),
+# so they update when the user selects a different compound from the dropdown.
+#
+# HEATMAP STRUCTURE:
+# Each cell in the matrix represents one dose combination:
+#   x-axis: Test compound concentration (conc2)
+#   y-axis: Anchor compound concentration (conc1)
+#   z-value (fill colour): inhibition % or synergy score
+#
+# factor() is used for x and y axes so the concentrations appear as 
+# discrete, evenly-spaced categories rather than on a continuous numeric 
+# scale (which would compress the lower values).
+#
+# add_trace() overlays the numeric values as text labels on each cell,
+# using a scatter trace in "text" mode. showlegend = FALSE prevents 
+# this label layer from appearing in the legend.
+#
+# COLOUR SCALES:
+# Both heatmaps use custom diverging colour scales (colorscale):
+#   inh_plot:  Blue → White → Red (fixed: blue=negative inhibition, red=positive)
+#              zmin = -100, zmax = 100 fixes the colour scale range
+#   ss_plot:   Green → White → Red (dynamic: green=antagonism, red=synergy)
+#              The midpoint (white = zero synergy) is calculated dynamically:
+#              mid = (0 - min_ss) / (max_ss - min_ss)
+#              This maps 0 to the correct proportional position between 
+#              the minimum and maximum values, regardless of their range.
+#
+# COLOUR BAR:
+# len, thickness, titlefont, and tickfont settings make the colour bar 
+# more compact so it doesn't dominate the plot area.
+# x and y position the colour bar to the right of the plot.
+# ============================================================
+
+# Fixed blue → white → red colour scale for inhibition heatmap
+colorscale1 <- list(c(0, "#115ed0"), c(0.5, "white"), c(1, "#ec1906"))
+
+# --- Top plot: % Inhibition heatmap ---
+inh_plot <- plot_ly(syn_dose_long_filt_shared_zip, 
+                    x = ~factor(conc2),   # Discrete x-axis (test compound doses)
+                    y = ~factor(conc1),   # Discrete y-axis (anchor doses)
+                    z = ~response_dose,   # Colour fill value
+                    type = "heatmap",
+                    colorscale = colorscale1,
+                    zmin = -100,          # Fix colour scale: -100% to +100% inhibition
+                    zmax = 100,
+                    colorbar = list(
+                      title = "Inhibition (%)", 
+                      x = 1.02,           # Position to the right of the plot
+                      y = 1,              # Align to the top of the plot
+                      len = 0.3,          # Colour bar height (fraction of plot height)
+                      thickness = 18,     # Colour bar width in pixels
+                      titlefont = list(size = 12),
+                      tickfont = list(size = 9.5)
+                    ),
+                    hovertemplate = ~paste0(
+                      "<b>", drug2, " (uM): ", conc2, "</b>",
+                      '<br>Anchor (uM): ', conc1,
+                      '<br>Inhibition (%): ', response_dose,
+                      "<extra></extra>")) %>%
+  
+  # Overlay numeric value labels on each heatmap cell
+  add_trace(
+    x = ~factor(conc2),
+    y = ~factor(conc1),
+    text = ~round(response_dose, 2),  # Rounded values as text
+    type = "scatter",
+    mode = "text",
+    textfont = list(size = 11),
+    showlegend = FALSE
+  ) %>%
+  layout(
+    margin = list(t = 40, r = 20, b = 40, l = 50),
+    plot_bgcolor = "white",
+    xaxis = list(title = "Test Compound (uM)", showline = TRUE,
+                 categoryorder = "trace"),   # Keep categories in the order they appear in data
+    yaxis = list(title = "Anchor (uM)", showline = TRUE)
+  )
+
+# --- Calculate dynamic colour scale limits for synergy heatmap ---
+# The synergy score range varies across datasets, so limits are 
+# calculated from the data with a minimum range of [-20, +20].
+min_ss <- syn_dose_long_filt %>% 
+  summarise(value = min(synergy_dose, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value > -20, -20, value - 5)) %>% 
+  pull(value)
+
+max_ss <- syn_dose_long_filt %>% 
+  summarise(value = max(synergy_dose, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value < 20, 20, value + 5)) %>% 
+  pull(value)
+
+# Calculate the proportional position of 0 within the [min_ss, max_ss] range.
+# This ensures white (neutral) always falls at zero regardless of the range.
+mid <- (0 - min_ss) / (max_ss - min_ss)
+
+# Dynamic green → white → red colour scale (green=antagonism, red=synergy)
+colorscale2 <- list(c(0, "#82e43c"), c(mid, "white"), c(1, "#ec1906"))
+
+# --- Bottom plot: Synergy score heatmap ---
+ss_plot <- plot_ly(syn_dose_long_filt_shared_zip, 
+                   x = ~factor(conc2),
+                   y = ~factor(conc1),
+                   z = ~synergy_dose,
+                   type = "heatmap",
+                   colorscale = colorscale2,
+                   zmin = min_ss,   # Dynamic colour scale range
+                   zmax = max_ss,
+                   colorbar = list(
+                     title = "Synergy Score", 
+                     x = 1.02,
+                     y = 0.5,       # Align to the middle of the plot (below the inhibition bar)
+                     len = 0.3,
+                     thickness = 18,
+                     titlefont = list(size = 12),
+                     tickfont = list(size = 9.5)
+                   ),
+                   hovertemplate = ~paste0(
+                     "<b>", drug2, " (uM): ", conc2, "</b>",
+                     '<br>Anchor (uM): ', conc1,
+                     '<br>Synergy Score: ', synergy_dose,
+                     "<extra></extra>")) %>%
+  add_trace(
+    x = ~factor(conc2),
+    y = ~factor(conc1),
+    text = ~round(synergy_dose, 2),
+    type = "scatter",
+    mode = "text",
+    textfont = list(size = 11),
+    showlegend = FALSE
+  ) %>%
+  layout(
+    # Extra bottom margin to accommodate the x-axis label below the combined plot
+    margin = list(t = 40, r = 20, b = 170, l = 50),
+    plot_bgcolor = "white",
+    xaxis = list(title = "Test Compound (uM)", showline = TRUE, categoryorder = "trace"),
+    yaxis = list(title = "Anchor (uM)", showline = TRUE)
+  )
+
+# --- Stack the two heatmaps vertically ---
+combined_plot <- subplot(inh_plot, ss_plot, 
+                         nrows = 2, 
+                         shareY = TRUE,    # Shared y-axis (anchor doses)
+                         titleX = TRUE,
+                         margin = 0.07)    # Slightly larger gap than the scatter plots
+
+combined_plot
+```
+
+<!-- ============================================================
+  BLISS PAGE
+  The Bliss page is structurally identical to the ZIP page above.
+  The only differences are:
+    - s = "Bliss" (filters the data to the Bliss model)
+    - All SharedData group names use "_bliss" suffix instead of "_zip"
+    - All filter IDs are incremented (e.g. "syn_filter3" instead of "syn_filter1")
+    - All JS filter selectors reference the new filter IDs
+  
+  This separation ensures that filter interactions on the Bliss page 
+  do not affect widgets on the ZIP page, and vice versa.
+  The annotations below are abbreviated where the code is identical 
+  to the ZIP page — refer to the ZIP page comments for full explanations.
+  ============================================================ -->
+
+Bliss 
+=======================================================================
+
+```{r shared data Bliss, include=TRUE}
+# ============================================================
+# PAGE-LEVEL DATA PREPARATION AND SHARED DATA — BLISS MODEL
+# Identical structure to the ZIP page above; s = "Bliss" filters 
+# all data to the Bliss Independence model only.
+# All SharedData group names use "_bliss" to avoid interfering 
+# with the ZIP page's linked widgets.
+# ============================================================
+
+s <- "Bliss"
+
+syn_matrix_long_filt <- syn_summary_long %>% 
+  filter(Model == s) %>% 
+  mutate(p_sig = case_when(synergy_matrix_p_value < 0.05 ~ "Significant",
+                           TRUE ~ "Not Significant"),
+         p_sig = factor(p_sig, levels = c("Significant", "Not Significant")))
+
+syn_dose_long_filt <- syn_stats_long %>% 
+  filter(Model == s) 
+
+compound_data <- data_norm %>%
+  mutate(conc1 = factor(conc1, 
+                        levels = c(1.6000, 0.1600, 0.0160, 0.0016, 0.0002, 0.0000),
+                        labels = c("1.6000", "0.1600", "0.0160", "0.0016", "0.0002", "0.0000")),
+         conc2_log = ifelse(conc2 == 0, 0.00001, conc2),
+         Count_Cells_Norm = round(Count_Cells_Norm, 2))
+
+syn_matrix_disp <- syn_matrix_long_filt %>% 
+  select(-c(Model, p_sig, contains("_bin"))) %>% 
+  arrange(drug2)
+
+syn_dose_disp <- syn_dose_long_filt %>% 
+  select(-Model) %>% 
+  arrange(drug2)
+
+conc_grid <- 10^seq(-5, 1, length.out = 200)
+
+preds <- compound_data %>%
+  group_by(drug2, conc1) %>%
+  group_modify(~ {
+    model <- tryCatch(
+      drm(Count_Cells_Norm ~ conc2,
+          data = .x,
+          fct = L.4(names = c("slope", "lower", "upper", "ED50"))),
+      error = function(e) NULL
+    )
+    if (is.null(model)) return(tibble())
+    tibble(conc2 = conc_grid) %>%
+      mutate(conc2_log = conc2,
+             Count_Cells_Norm = predict(model, newdata = data.frame(conc2 = conc2)))
+  }) %>%
+  ungroup()
+
+# write_csv(preds, paste0("../output/", prefix, "_preds_", s, ".csv"))
+# preds <- read_csv(paste0("../output/", prefix, "_preds_", s, ".csv"))
+```
+
+```{r}
+# SharedData objects for the Bliss page — note "_bliss" group name suffix 
+# on all objects to keep them isolated from the ZIP page widgets.
+syn_matrix_long_filt_shared_bliss <- SharedData$new(syn_matrix_long_filt, group = "drug2_bliss", key = ~drug2)
+syn_dose_long_filt_shared_bliss   <- SharedData$new(syn_dose_long_filt,   group = "dose_bliss",  key = ~drug2)
+compound_data_shared_bliss        <- SharedData$new(compound_data,        group = "dose_bliss",  key = ~drug2)
+preds_shared_bliss                <- SharedData$new(preds,                group = "dose_bliss",  key = ~drug2)
+syn_matrix_disp_shared_bliss      <- SharedData$new(syn_matrix_disp,      group = "drug2_bliss", key = ~drug2)
+syn_dose_disp_shared_bliss        <- SharedData$new(syn_dose_disp,        group = "drug2_bliss", key = ~drug2)
+```
+
+
+Column {data-width=275}
+-----------------------------------------------------------------------
+
+### Hit Identification Filters
+
+***Bliss Independence Model*** <br>
+*Assumption: The compounds act through separate pathways with no shared mechanisms. Compares the experimental result to the expected effect of two drugs acting independently (useful for drugs with different modes of action).* <br>
+
+***Test compound filter:*** <br>
+Use the drop-down menu to view the % inhibition and synergy dose-response matrix, and the dose-response curves at different doses of the test compound.
+
+```{r}
+# Note: id = "plot_drug_filter2" — unique ID so this filter is 
+# independent of "plot_drug_filter1" on the ZIP page.
+filter_select(
+  id = "plot_drug_filter2",
+  label = "Select a test compound:",
+  sharedData = syn_dose_long_filt_shared_bliss, 
+  ~drug2,
+  multiple = FALSE
+)
+```
+
+```{js}
+// Same pre-selection logic as the ZIP page, but targeting "#plot_drug_filter2"
+// (the Bliss page's dropdown ID) instead of "#plot_drug_filter1".
+$(document).ready(function() {
+  setTimeout(function() {
+    var selectElement = $("#plot_drug_filter2 .selectized").first();
+    if (selectElement.length) {
+      var selectize = selectElement[0].selectize;
+      selectize.setValue("Test_Compound01", false);
+      selectize.removeOption("");
+    }
+  }, 100);
+});
+```
+
+***Synergy score filters:*** <br>
+Synergy scores indicate the degree of interaction between two compounds. Negative values indicate **antagonism** and positive values indicate **synergy** (values around zero are more likely to indicate **additivity**).
+
+```{r}
+# Filter IDs are "syn_filter3" and "syn_filter4" (incrementing from the ZIP page)
+# to avoid HTML ID conflicts across pages.
+filter_slider(
+  id = "syn_filter3",
+  label = "Mean synergy score:",
+  sharedData = syn_matrix_long_filt_shared_bliss,
+  ~synergy_mean_bin,
+  step = 0.1,
+  round = TRUE,
+  ticks = FALSE
+)
+```
+
+```{r}
+filter_slider(
+  id = "syn_filter4",
+  label = "Maximum synergy score:",
+  sharedData = syn_matrix_long_filt_shared_bliss,
+  ~synergy_max_bin,
+  step = 0.1,
+  round = TRUE,
+  ticks = FALSE
+)
+```
+
+```{r}
+filter_checkbox(
+  id = "pval_filter2",   # Unique ID for this page
+  label = "Synergy p-value:",
+  sharedData = syn_matrix_long_filt_shared_bliss,
+  ~p_sig,
+  allLevels = TRUE
+)
+```
+
+***Combination sensitivity score (CSS) filter:*** <br>
+Calculated based on the area under the dose–response curve of each drug while the other is fixed at its IC50 concentration. The CSS indicates the efficacy of a compound combination.
+
+```{r}
+filter_slider(
+  id = "css_filter2",   # Unique ID for this page
+  label = "CSS:",
+  sharedData = syn_matrix_long_filt_shared_bliss,
+  ~css_bin,
+  step = 1,
+  round = TRUE,
+  ticks = FALSE
+)
+```
+
+<br>
+
+Column {data-width=700}
+-----------------------------------------------------------------------
+
+### Synergy score vs. Combined Sensitivity Score
+
+```{r}
+# Scatter plots for the Bliss page — identical structure to the ZIP page.
+# All shared data references use the _bliss objects.
+# See the ZIP page scatter plot section for full annotation.
+
+syn_min <- syn_matrix_long_filt_shared_bliss$data() %>% 
+  summarise(value = min(synergy_matrix_mean, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value > -20, -20, value - 5), value = round(value)) %>% 
+  pull(value)
+
+syn_max <- syn_matrix_long_filt_shared_bliss$data() %>% 
+  summarise(value = max(synergy_matrix_mean, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value < 20, 20, value + 5), value = round(value)) %>% 
+  pull(value)
+
+ss_dot_mean_plotly <- syn_matrix_long_filt_shared_bliss %>%
+  plot_ly(., x = ~css, y = ~synergy_matrix_mean,
+          color = ~drug2, legendgroup = ~drug2, size = ~synergy_matrix_p_value,
+          text = ~drug2, type = 'scatter', mode = 'markers',
+          marker = list(opacity = 0.8), showlegend = FALSE,
+          hovertemplate = ~paste0("<b>", drug2, "</b>",
+            '<br>Synergy mean: ', synergy_matrix_mean,
+            '<br>Synergy p-value: ', synergy_matrix_p_value,
+            '<br>CSS: ', css, "<extra></extra>")) %>%
+  layout(xaxis = list(title = "CSS (% Inhibition)", range = c(0, 100),
+                      tickvals = seq(0, 100, by = 25), showline = TRUE, zeroline = FALSE),
+         yaxis = list(title = "Mean Synergy Score (% Inhibition)",
+                      range = c(syn_min, syn_max), tickvals = seq(syn_min, syn_max, by = 10),
+                      showline = TRUE),
+         legend = list(title = list(text = "Colour = Test Compound\nSize = Synergy p-value\n",
+                                    font = list(size = 12.5)),
+                       font = list(size = 10.5), x = 1.05, y = 0.5),
+         margin = list(t = 30, r = 30, b = 65, l = 65), plot_bgcolor = "white") %>% 
+  layout(shapes = list(list(type = "line", x0 = 50, x1 = 50,
+                            y0 = syn_min, y1 = syn_max,
+                            line = list(dash = "dot", color = "black", width = 0.6))))
+
+syn_min <- syn_matrix_long_filt_shared_bliss$data() %>% 
+  summarise(value = min(synergy_matrix_max, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value > -20, -20, value - 5), value = round(value)) %>% 
+  pull(value)
+
+syn_max <- syn_matrix_long_filt_shared_bliss$data() %>% 
+  summarise(value = max(synergy_matrix_max, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value < 20, 20, value + 5), value = round(value)) %>% 
+  pull(value)
+
+ss_dot_max_plotly <- syn_matrix_long_filt_shared_bliss %>%
+  plot_ly(., x = ~css, y = ~synergy_matrix_max,
+          color = ~drug2, legendgroup = ~drug2, size = ~synergy_matrix_p_value,
+          text = ~drug2, type = 'scatter', mode = 'markers',
+          marker = list(opacity = 0.8),
+          hovertemplate = ~paste0("<b>", drug2, "</b>",
+            '<br>Synergy max: ', synergy_matrix_max,
+            '<br>Synergy p-value: ', synergy_matrix_p_value,
+            '<br>CSS: ', css, "<extra></extra>")) %>%
+  layout(xaxis = list(title = "CSS (% Inhibition)", range = c(0, 100),
+                      tickvals = seq(0, 100, by = 25), showline = TRUE, zeroline = FALSE),
+         yaxis = list(title = "Maximum Synergy Score (% Inhibition)",
+                      range = c(syn_min, syn_max), tickvals = seq(syn_min, syn_max, by = 10),
+                      showline = TRUE),
+         legend = list(title = list(text = "Colour = Test Compound\nSize = Synergy p-value\n",
+                                    font = list(size = 12.5)),
+                       font = list(size = 10.5), x = 1.05, y = 0.5),
+         margin = list(t = 30, r = 30, b = 80, l = 65), plot_bgcolor = "white") %>% 
+  layout(shapes = list(list(type = "line", x0 = 50, x1 = 50,
+                            y0 = syn_min, y1 = syn_max,
+                            line = list(dash = "dot", color = "black", width = 0.6))))
+
+combined_plot_dot <- subplot(ss_dot_mean_plotly, ss_dot_max_plotly, 
+                             nrows = 2, shareY = TRUE, titleX = TRUE, margin = 0.05)
+combined_plot_dot
+```
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Single Combination Dose-Response Curves
+
+```{r, fig.width=8, fig.height=5}
+# Dose-response curve plot for the Bliss page.
+# Identical to the ZIP page version; all shared data references 
+# use the _bliss objects. See the ZIP page for full annotation.
+
+cols <- c("1.6000" = "#08306b", "0.1600" = "#08519c", "0.0160" = "#4292c6",
+          "0.0016" = "#6baed6", "0.0002" = "#9ecae1", "0.0000" = "grey")
+
+p <- plot_ly()
+
+p <- p %>%
+  add_markers(data = compound_data_shared_bliss,
+              x = ~conc2_log, y = ~Count_Cells_Norm, color = ~conc1, colors = cols,
+              marker = list(size = 8),
+              hovertemplate = ~paste0("<b>", drug2, " (uM): ", conc2, "</b>",
+                '<br>Anchor (uM): ', conc1,
+                "<br>Cell Count (FC to DMSO): ", round(Count_Cells_Norm, 2),
+                "<extra></extra>"),
+              name = ~conc1, legendgroup = ~conc1, showlegend = TRUE)
+
+p <- p %>%
+  add_lines(data = preds_shared_bliss,
+            x = ~conc2_log, y = ~Count_Cells_Norm, color = ~conc1, colors = cols,
+            line = list(width = 2),
+            hovertemplate = ~paste0("Cell Count (FC to DMSO): ", round(Count_Cells_Norm, 2),
+              "<extra></extra>"),
+            name = ~conc1, legendgroup = ~conc1, showlegend = FALSE)
+
+p <- p %>%
+  layout(
+    xaxis = list(title = "Test Compound (uM)", type = "log",
+                 range = c(log10(0.0001), log10(2)), tickmode = "array",
+                 tickvals = c(0.0001, 0.001, 0.01, 0.1, 1),
+                 ticktext = c("0", "0.001", "0.01", "0.1", "1")),
+    yaxis = list(title = "Cell Count Fold Change to DMSO", range = c(0, 1.5),
+                 tickvals = seq(0, 1.5, by = 0.25)),
+    shapes = list(
+      list(type = "line", x0 = min(compound_data$conc2_log), x1 = max(compound_data$conc2_log),
+           y0 = 0.5, y1 = 0.5, line = list(dash = "dot")),
+      list(type = "line", x0 = min(compound_data$conc2_log), x1 = max(compound_data$conc2_log),
+           y0 = 1.0, y1 = 1.0, line = list(dash = "dot"))),
+    legend = list(title = list(text = "Anchor (uM)"))
+  )
+p
+```
+
+### Hit Compounds - Synergy Data
+
+```{r}
+# Synergy summary table for the Bliss page.
+# Identical to the ZIP page version; uses syn_matrix_disp_shared_bliss.
+# See the ZIP page for full annotation.
+datatable(
+  syn_matrix_disp_shared_bliss, 
+  extensions = c('Buttons', 'Scroller', 'FixedColumns', 'ColReorder'), 
+  rownames = FALSE,
+  options = list(
+    dom = 'Brfti',
+    columnDefs = list(list(className = 'dt-center', targets = "_all")),
+    pageLength = 50,
+    buttons = list(
+      list(extend = 'copyHtml5', text = "Copy to Clipboard"),
+      list(extend = 'excel',
+           filename = paste0("VCFG_DoseResponseMatrix_SynergyData_Hits_", s, "_", c), 
+           title = NULL),
+      list(extend = 'colvis', text = 'Show/Hide Columns')),
+    searching = TRUE, scrollX = TRUE, paging = TRUE,
+    fixedColumns = list(leftColumns = 2),
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().node()).css('font-size', '13.5px');",
+      "$('.dt-buttons .btn').css({'font-size': '13px', 'padding': '4px 4px'});",
+      "}"
+    )
+  )
+)
+```
+
+Column {data-width=600}
+-----------------------------------------------------------------------
+
+### Single Combination Dose-Response Matrix
+
+Use the top plot to view the **dose-response inhibition** data from the mean of the two replicates for each dose of the selected test compound with the anchor compound. The bottom plot shows the **calculated synergy score** for the selected test compound at each dose combination.
+
+```{r, fig.width=8, fig.height=5}
+# Dose-response matrix heatmaps for the Bliss page.
+# Identical structure to the ZIP page; uses syn_dose_long_filt_shared_bliss.
+# The dynamic mid-point calculation and colour scales are the same.
+# See the ZIP page heatmap section for full annotation.
+
+colorscale1 <- list(c(0, "#115ed0"), c(0.5, "white"), c(1, "#ec1906"))
+
+inh_plot <- plot_ly(syn_dose_long_filt_shared_bliss, 
+                    x = ~factor(conc2), y = ~factor(conc1), z = ~response_dose,
+                    type = "heatmap", colorscale = colorscale1, zmin = -100, zmax = 100,
+                    colorbar = list(title = "Inhibition (%)", x = 1.02, y = 1,
+                                    len = 0.3, thickness = 18,
+                                    titlefont = list(size = 12), tickfont = list(size = 9.5)),
+                    hovertemplate = ~paste0("<b>", drug2, " (uM): ", conc2, "</b>",
+                      '<br>Anchor (uM): ', conc1,
+                      '<br>Inhibition (%): ', response_dose, "<extra></extra>")) %>%
+  add_trace(x = ~factor(conc2), y = ~factor(conc1), text = ~round(response_dose, 2),
+            type = "scatter", mode = "text", textfont = list(size = 11), showlegend = FALSE) %>%
+  layout(margin = list(t = 40, r = 20, b = 40, l = 50), plot_bgcolor = "white",
+         xaxis = list(title = "Test Compound (uM)", showline = TRUE, categoryorder = "trace"),
+         yaxis = list(title = "Anchor (uM)", showline = TRUE))
+
+min_ss <- syn_dose_long_filt %>% 
+  summarise(value = min(synergy_dose, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value > -20, -20, value - 5)) %>% pull(value)
+max_ss <- syn_dose_long_filt %>% 
+  summarise(value = max(synergy_dose, na.rm = TRUE)) %>% 
+  mutate(value = if_else(value < 20, 20, value + 5)) %>% pull(value)
+
+mid <- (0 - min_ss) / (max_ss - min_ss)
+colorscale2 <- list(c(0, "#82e43c"), c(mid, "white"), c(1, "#ec1906"))
+
+ss_plot <- plot_ly(syn_dose_long_filt_shared_bliss, 
+                   x = ~factor(conc2), y = ~factor(conc1), z = ~synergy_dose,
+                   type = "heatmap", colorscale = colorscale2, zmin = min_ss, zmax = max_ss,
+                   colorbar = list(title = "Synergy Score", x = 1.02, y = 0.5,
+                                   len = 0.3, thickness = 18,
+                                   titlefont = list(size = 12), tickfont = list(size = 9.5)),
+                   hovertemplate = ~paste0("<b>", drug2, " (uM): ", conc2, "</b>",
+                     '<br>Anchor (uM): ', conc1,
+                     '<br>Synergy Score: ', synergy_dose, "<extra></extra>")) %>%
+  add_trace(x = ~factor(conc2), y = ~factor(conc1), text = ~round(synergy_dose, 2),
+            type = "scatter", mode = "text", textfont = list(size = 11), showlegend = FALSE) %>%
+  layout(margin = list(t = 40, r = 20, b = 170, l = 50), plot_bgcolor = "white",
+         xaxis = list(title = "Test Compound (uM)", showline = TRUE, categoryorder = "trace"),
+         yaxis = list(title = "Anchor (uM)", showline = TRUE))
+
+combined_plot <- subplot(inh_plot, ss_plot, nrows = 2, shareY = TRUE, titleX = TRUE, margin = 0.07)
+combined_plot
+```

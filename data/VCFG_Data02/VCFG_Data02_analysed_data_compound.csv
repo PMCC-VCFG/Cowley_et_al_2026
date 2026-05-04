@@ -1,0 +1,141 @@
+Cell_Line,Compound_Name,concentration_points,ctrl_cell_doublings,fit_GR,fit_rel_cell,GR50,GRmax,GRmax_Death_Type,GR_AOC,GEC50,GRinf,GRinf_Death_Type,h_GR,r2_GR,pval_GR,flat_fit_GR,IC50,Emax,AUC,EC50,Einf,h,r2_rel_cell,pval_rel_cell,flat_fit_rel_cell
+Cell_Line_X,Test_Compound01,4,2.7399,sigmoid,sigmoid,0.156,-0.192,Cytotoxic,0.38,0.198,-0.346,Cytotoxic,2.209,0.999,0.001,NA,0.144,0.083,0.64,0.139,0.036,2.313,0.998,0.002,NA
+Cell_Line_X,Test_Compound02,4,2.7399,sigmoid,sigmoid,0.236,-0.293,Cytotoxic,0.31,0.384,-1,Cytotoxic,2.267,0.998,0.002,NA,0.211,0.058,0.72,0.211,0,2.999,0.988,0.012,NA
+Cell_Line_X,Test_Compound03,4,2.7399,sigmoid,sigmoid,Inf,0.672,Partially Cytostatic,0.24,0.03,0.686,Partially Cytostatic,1.838,0.961,0.039,NA,Inf,0.613,0.71,0.027,0.626,1.795,0.968,0.032,NA
+Cell_Line_X,Test_Compound04,4,2.7399,flat,flat,Inf,0.988,No Effect,0.01,0,0.988,No Effect,0.01,-0.014,1,0.986,Inf,0.983,0.98,0,0.983,0.01,-0.014,1,0.982
+Cell_Line_X,Test_Compound05,4,2.7399,sigmoid,sigmoid,0.183,-0.36,Cytotoxic,0.37,0.308,-0.885,Cytotoxic,1.964,1,0,NA,0.166,0.044,0.67,0.166,0,2.503,0.998,0.002,NA
+Cell_Line_X,Test_Compound06,4,2.7399,flat,flat,-Inf,-0.487,Cytotoxic,1.45,0,-0.487,Cytotoxic,0.01,0.243,0.757,-0.433,-Inf,0.024,0.03,0,0.024,0.01,0,1,0.032
+Cell_Line_X,Test_Compound07,4,2.7399,sigmoid,sigmoid,0.121,-0.312,Cytotoxic,0.48,0.145,-0.347,Cytotoxic,2.925,1,0,NA,0.113,0.054,0.58,0.109,0.045,3.121,0.999,0.001,NA
+Cell_Line_X,Test_Compound08,4,2.7399,flat,flat,Inf,0.915,No Effect,0.03,0,0.915,No Effect,0.01,0.949,0.051,0.963,Inf,0.888,0.96,0,0.888,0.01,0.944,0.056,0.951
+Cell_Line_X,Test_Compound09,4,2.7399,sigmoid,sigmoid,0.871,0.779,Partially Cytostatic,0.03,0.575,0.399,Partially Cytostatic,3.866,0.974,0.026,NA,0.75,0.726,0.96,0.538,0.362,3.871,0.968,0.032,NA
+Cell_Line_X,Test_Compound10,4,2.7399,sigmoid,sigmoid,Inf,0.925,Partially Cytostatic,0.05,6.106,0.718,Partially Cytostatic,0.386,0.955,0.045,NA,Inf,0.901,0.93,0.056,0.887,0.896,0.998,0.002,NA
+Cell_Line_X,Test_Compound11,4,2.7399,sigmoid,flat,0.007,-0.38,Cytotoxic,1.12,0.016,-0.476,Cytotoxic,0.799,0.998,0.002,NA,-Inf,0.04,0.12,0,0.04,0.01,0,1,0.134
+Cell_Line_X,Test_Compound12,4,2.7399,flat,flat,-Inf,-0.732,Cytotoxic,1.49,0,-0.732,Cytotoxic,0.01,0.358,0.642,-0.441,-Inf,0.004,0.03,0,0.004,0.01,0,1,0.037
+Cell_Line_X,Test_Compound13,4,2.7399,flat,flat,Inf,0.848,No Effect,0.01,0,0.848,No Effect,0.01,0.896,0.104,0.978,Inf,0.805,0.99,0,0.805,0.01,0.881,0.119,0.974
+Cell_Line_X,Test_Compound14,4,2.7399,flat,flat,Inf,0.988,No Effect,0,0,0.988,No Effect,0.01,-0.01,1,1.001,Inf,0.984,1,0,0.984,0.01,-0.011,1,1.002
+Cell_Line_X,Test_Compound15,4,2.7399,flat,flat,Inf,0.905,No Effect,-0.01,0,0.905,No Effect,0.01,0.565,0.435,0.997,Inf,0.875,1.01,0,0.875,0.01,0.529,0.471,0.999
+Cell_Line_X,Test_Compound16,4,2.7399,sigmoid,sigmoid,0.505,0.506,Partially Cytostatic,0.12,1.015,-1,Cytotoxic,1.572,0.998,0.002,NA,0.449,0.459,0.86,0.365,0.165,1.936,0.998,0.002,NA
+Cell_Line_X,Test_Compound17,4,2.7399,flat,sigmoid,Inf,0.896,No Effect,0.03,0,0.896,No Effect,0.01,0.946,0.054,0.966,Inf,0.864,0.96,0.237,0.829,1.846,0.954,0.046,NA
+Cell_Line_X,Test_Compound18,4,2.7399,sigmoid,sigmoid,0.052,-0.366,Cytotoxic,0.79,0.064,-0.366,Cytotoxic,2.666,0.999,0.001,NA,0.048,0.043,0.36,0.047,0.053,3.995,0.999,0.001,NA
+Cell_Line_X,Test_Compound19,4,2.7399,flat,flat,Inf,0.981,No Effect,0.01,0,0.981,No Effect,0.01,0.161,0.839,0.996,Inf,0.975,0.99,0,0.975,0.01,0.16,0.84,0.995
+Cell_Line_X,Test_Compound20,4,2.7399,sigmoid,sigmoid,0.15,-0.384,Cytotoxic,0.4,0.184,-0.445,Cytotoxic,3.134,0.998,0.002,NA,0.142,0.04,0.65,0.14,0.025,3.262,0.992,0.008,NA
+Cell_Line_X,Test_Compound21,4,2.7399,flat,flat,Inf,0.987,No Effect,0,0,0.987,No Effect,0.01,0.258,0.742,0.997,Inf,0.983,1,0,0.983,0.01,0.318,0.682,0.996
+Cell_Line_X,Test_Compound22,4,2.7399,sigmoid,flat,Inf,0.828,No Effect,0.1,0.072,0.807,No Effect,1.219,0.957,0.043,NA,Inf,0.782,0.86,0,0.782,0.01,0.894,0.106,0.866
+Cell_Line_X,Test_Compound23,4,2.7399,flat,flat,Inf,0.984,No Effect,0.01,0,0.984,No Effect,0.01,-0.392,1,0.984,Inf,0.979,0.98,0,0.979,0.01,-0.395,1,0.978
+Cell_Line_X,Test_Compound24,4,2.7399,flat,sigmoid,-Inf,-0.514,Cytotoxic,1.06,0,-0.514,Cytotoxic,0.01,0.893,0.107,-0.02,0.015,0.021,0.18,0.015,0,1.064,0.959,0.041,NA
+Cell_Line_X,Test_Compound25,4,2.7399,sigmoid,sigmoid,0.2,0.064,Partially Cytostatic,0.22,0.195,0.055,Partially Cytostatic,5,0.999,0.001,NA,0.193,0.177,0.78,0.177,0.173,5,0.997,0.003,NA
+Cell_Line_X,Test_Compound26,4,2.7399,flat,flat,Inf,0.928,No Effect,-0.01,0,0.928,No Effect,0.01,0.649,0.351,1.004,Inf,0.904,1.02,0,0.904,0.01,0.626,0.374,1.006
+Cell_Line_X,Test_Compound27,4,2.7399,flat,flat,Inf,0.748,Partially Cytostatic,0.09,0,0.748,Partially Cytostatic,0.01,0.908,0.092,0.897,Inf,0.691,0.89,0,0.691,0.01,0.883,0.117,0.869
+Cell_Line_X,Test_Compound28,4,2.7399,flat,flat,Inf,0.659,Partially Cytostatic,0.15,0,0.659,Partially Cytostatic,0.01,0.363,0.637,0.819,Inf,0.599,0.82,0,0.599,0.01,0.3,0.7,0.78
+Cell_Line_X,Test_Compound29,4,2.7399,flat,flat,Inf,0.825,No Effect,0.14,0,0.825,No Effect,0.01,0.384,0.616,0.865,Inf,0.778,0.82,0,0.778,0.01,0.781,0.219,0.826
+Cell_Line_X,Test_Compound30,4,2.7399,sigmoid,sigmoid,35.641,0.888,Partially Cytostatic,0.05,6.25,0.336,Partially Cytostatic,0.641,0.957,0.043,NA,12.266,0.854,0.93,6.043,0.179,0.625,0.956,0.044,NA
+Cell_Line_X,Test_Compound31,4,2.7399,sigmoid,sigmoid,Inf,0.673,Partially Cytostatic,0.21,0.05,0.669,Partially Cytostatic,1.436,0.988,0.012,NA,Inf,0.613,0.75,0.043,0.615,1.538,0.989,0.011,NA
+Cell_Line_X,Test_Compound32,4,2.7399,flat,flat,Inf,1.035,No Effect,-0.02,0,1.035,No Effect,0.01,-2.23,1,1.026,Inf,1.048,1.03,0,1.048,0.01,-2.235,1,1.037
+Cell_Line_X,Test_Compound33,4,2.7399,sigmoid,sigmoid,0.041,-0.451,Cytotoxic,0.83,0.083,-0.641,Cytotoxic,1.163,0.997,0.003,NA,0.034,0.029,0.3,0.034,0,1.242,0.992,0.008,NA
+Cell_Line_X,Test_Compound34,4,2.7399,sigmoid,sigmoid,0.282,0.063,Partially Cytostatic,0.26,0.541,-1,Cytotoxic,1.686,0.991,0.009,NA,0.249,0.177,0.73,0.249,0,2.049,0.972,0.028,NA
+Cell_Line_X,Test_Compound35,4,2.7399,flat,flat,Inf,1.014,No Effect,-0.03,0,1.014,No Effect,0.01,-7.918,1,1.029,Inf,1.02,1.04,0,1.02,0.01,-7.768,1,1.041
+Cell_Line_X,Test_Compound36,4,2.7399,sigmoid,sigmoid,0.044,-0.51,Cytotoxic,0.86,0.075,-0.609,Cytotoxic,1.503,0.995,0.005,NA,0.038,0.021,0.3,0.038,0,1.458,0.99,0.01,NA
+Cell_Line_X,Test_Compound37,4,2.7399,sigmoid,sigmoid,Inf,0.559,Partially Cytostatic,0.16,0.164,0.514,Partially Cytostatic,2.036,1,0,NA,0.543,0.506,0.81,0.146,0.466,2.05,1,0,NA
+Cell_Line_X,Test_Compound38,4,2.7399,flat,flat,Inf,0.933,No Effect,-0.01,0,0.933,No Effect,0.01,0.677,0.323,1.002,Inf,0.911,1.01,0,0.911,0.01,0.657,0.343,1.004
+Cell_Line_X,Test_Compound39,4,2.7399,flat,flat,Inf,0.901,No Effect,-0.01,0,0.901,No Effect,0.01,0.555,0.445,1.006,Inf,0.87,1.02,0,0.87,0.01,0.517,0.483,1.01
+Cell_Line_X,Test_Compound40,4,2.7399,flat,flat,Inf,0.935,No Effect,-0.02,0,0.935,No Effect,0.01,0.326,0.674,1.014,Inf,0.914,1.02,0,0.914,0.01,0.289,0.711,1.021
+Cell_Line_X,Test_Compound41,4,2.7399,flat,flat,Inf,0.982,No Effect,-0.03,0,0.982,No Effect,0.01,-0.643,1,1.024,Inf,0.976,1.04,0,0.976,0.01,-0.661,1,1.034
+Cell_Line_X,Test_Compound42,4,2.7399,flat,flat,Inf,0.912,No Effect,0.07,0,0.912,No Effect,0.01,0.521,0.479,0.937,Inf,0.884,0.91,0,0.884,0.01,0.526,0.474,0.916
+Cell_Line_X,Test_Compound43,4,2.7399,sigmoid,flat,0.011,-0.626,Cytotoxic,1.29,0.022,-0.677,Cytotoxic,1.165,0.961,0.039,NA,-Inf,0.01,0.1,0,0.01,0.01,0,1,0.115
+Cell_Line_X,Test_Compound44,4,2.7399,sigmoid,sigmoid,0.473,0.475,Partially Cytostatic,0.16,1.199,-1,Cytotoxic,1.182,1,0,NA,0.413,0.434,0.81,0.413,0,1.334,0.999,0.001,NA
+Cell_Line_X,Test_Compound45,4,2.7399,flat,flat,-Inf,0.452,Partially Cytostatic,0.51,0,0.452,Partially Cytostatic,0.01,0,1,0.485,-Inf,0.416,0.44,0,0.416,0.01,0.705,0.295,0.442
+Cell_Line_X,Test_Compound46,4,2.7399,flat,flat,Inf,1.006,No Effect,-0.02,0,1.006,No Effect,0.01,-4.88,1,1.019,Inf,1.008,1.02,0,1.008,0.01,-4.827,1,1.026
+Cell_Line_X,Test_Compound47,4,2.7399,flat,flat,Inf,0.883,No Effect,0.03,0,0.883,No Effect,0.01,0.843,0.157,0.963,Inf,0.847,0.96,0,0.847,0.01,0.948,0.052,0.952
+Cell_Line_X,Test_Compound48,4,2.7399,flat,flat,Inf,0.975,No Effect,-0,0,0.975,No Effect,0.01,0.538,0.462,1,Inf,0.966,1,0,0.966,0.01,0.559,0.441,1
+Cell_Line_X,Test_Compound49,4,2.7399,flat,flat,Inf,0.921,No Effect,0.03,0,0.921,No Effect,0.01,0.887,0.113,0.969,Inf,0.895,0.96,0,0.895,0.01,0.883,0.117,0.959
+Cell_Line_X,Test_Compound50,4,2.7399,flat,flat,Inf,0.956,No Effect,0,0,0.956,No Effect,0.01,0.325,0.675,1,Inf,0.941,1,0,0.941,0.01,0.441,0.559,1.002
+Cell_Line_X,Test_Compound51,4,2.7399,flat,flat,Inf,1.038,No Effect,-0.06,0,1.038,No Effect,0.01,-17.926,1,1.065,Inf,1.054,1.09,0,1.054,0.01,-17.27,1,1.092
+Cell_Line_X,Test_Compound52,4,2.7399,sigmoid,sigmoid,0.444,0.463,Partially Cytostatic,0.18,0.435,0.013,Partially Cytostatic,1.271,1,0,NA,0.377,0.425,0.79,0.306,0.118,1.278,1,0,NA
+Cell_Line_X,Test_Compound53,4,2.7399,flat,flat,Inf,0.989,No Effect,0,0,0.989,No Effect,0.01,-0.021,1,0.998,Inf,0.985,1,0,0.985,0.01,-0.02,1,0.997
+Cell_Line_X,Test_Compound54,4,2.7399,flat,flat,Inf,0.865,No Effect,0.03,0,0.865,No Effect,0.01,0.928,0.072,0.964,Inf,0.825,0.96,0,0.825,0.01,0.92,0.08,0.954
+Cell_Line_X,Test_Compound55,4,2.7399,sigmoid,flat,0.005,-0.431,Cytotoxic,1.4,0.006,-0.43,Cytotoxic,2.251,1,0,NA,-Inf,0.032,0.04,0,0.032,0.01,0,1,0.041
+Cell_Line_X,Test_Compound56,4,2.7399,sigmoid,sigmoid,0.018,-0.353,Cytotoxic,1.05,0.028,-0.399,Cytotoxic,1.419,0.996,0.004,NA,0.016,0.045,0.17,0.015,0.035,1.552,0.999,0.001,NA
+Cell_Line_X,Test_Compound57,4,2.7399,sigmoid,sigmoid,0.245,0.437,Partially Cytostatic,0.42,0.316,-0.044,Cytotoxic,0.334,0.998,0.002,NA,0.132,0.404,0.53,0.052,0.141,0.359,0.998,0.002,NA
+Cell_Line_X,Test_Compound58,4,2.7399,sigmoid,sigmoid,0.128,-0.211,Cytotoxic,0.47,0.252,-0.708,Cytotoxic,1.301,1,0,NA,0.11,0.078,0.56,0.11,0,1.51,0.999,0.001,NA
+Cell_Line_X,Test_Compound59,4,2.7399,flat,flat,Inf,1,No Effect,-0.03,0,1,No Effect,0.01,-2.317,1,1.031,Inf,1,1.05,0,1,0.01,-2.304,1,1.044
+Cell_Line_X,Test_Compound60,4,2.7399,sigmoid,sigmoid,3.231,0.63,Partially Cytostatic,0.27,50,-0.454,Cytotoxic,0.236,0.996,0.004,NA,1.692,0.571,0.68,1.692,0,0.248,0.995,0.005,NA
+Cell_Line_X,Test_Compound61,4,2.7399,flat,flat,Inf,1.012,No Effect,-0.01,0,1.012,No Effect,0.01,-1.186,1,1.016,Inf,1.017,1.02,0,1.017,0.01,-1.192,1,1.022
+Cell_Line_X,Test_Compound62,4,2.7399,flat,flat,Inf,0.961,No Effect,0,0,0.961,No Effect,0.01,0.808,0.192,0.992,Inf,0.947,1,0,0.947,0.01,0.802,0.198,0.99
+Cell_Line_X,Test_Compound63,4,2.7399,flat,flat,Inf,0.857,No Effect,0.04,0,0.857,No Effect,0.01,0.829,0.171,0.948,Inf,0.816,0.94,0,0.816,0.01,0.812,0.188,0.933
+Cell_Line_X,Test_Compound64,4,2.7399,sigmoid,sigmoid,1.659,0.773,Partially Cytostatic,0.09,5.913,-0.89,Cytotoxic,0.805,0.989,0.011,NA,15.182,0.719,0.89,0.416,0.489,1.055,0.989,0.011,NA
+Cell_Line_X,Test_Compound65,4,2.7399,sigmoid,sigmoid,Inf,0.548,Partially Cytostatic,0.36,0.017,0.563,Partially Cytostatic,1.582,0.976,0.024,NA,Inf,0.496,0.58,0.015,0.51,1.63,0.981,0.019,NA
+Cell_Line_X,Test_Compound66,4,2.7399,flat,flat,Inf,0.94,No Effect,0.03,0,0.94,No Effect,0.01,0.738,0.262,0.973,Inf,0.919,0.96,0,0.919,0.01,0.804,0.196,0.964
+Cell_Line_X,Test_Compound67,4,2.7399,sigmoid,sigmoid,Inf,0.644,Partially Cytostatic,0.24,0.048,0.623,Partially Cytostatic,1.635,0.98,0.02,NA,Inf,0.584,0.71,0.043,0.559,1.525,0.981,0.019,NA
+Cell_Line_X,Test_Compound68,4,2.7399,flat,flat,Inf,1.001,No Effect,-0.01,0,1.001,No Effect,0.01,-0.513,1,1.012,Inf,1.001,1.01,0,1.001,0.01,-0.515,1,1.017
+Cell_Line_X,Test_Compound69,4,2.7399,sigmoid,flat,0.012,-0.413,Cytotoxic,1.31,0.014,-0.406,Cytotoxic,3.721,1,0,NA,-Inf,0.035,0.07,0,0.035,0.01,0,1,0.085
+Cell_Line_X,Test_Compound70,4,2.7399,flat,flat,Inf,1.004,No Effect,-0.01,0,1.004,No Effect,0.01,-4.199,1,1.012,Inf,1.006,1.02,0,1.006,0.01,-4.164,1,1.016
+Cell_Line_Y,Test_Compound01,4,1.1784,flat,flat,Inf,-0.805,Cytotoxic,0.39,0,-0.805,Cytotoxic,0.01,0.916,0.084,0.548,Inf,0.064,0.8,0,0.064,0.01,0.895,0.105,0.771
+Cell_Line_Y,Test_Compound02,4,1.1784,sigmoid,sigmoid,0.143,-0.896,Cytotoxic,0.46,0.176,-0.906,Cytotoxic,5,0.973,0.027,NA,0.172,0.031,0.76,0.17,0.026,5,0.964,0.036,NA
+Cell_Line_Y,Test_Compound03,4,1.1784,sigmoid,sigmoid,0.04,-0.002,Cytotoxic,0.68,0.039,0.039,Partially Cytostatic,2.671,0.991,0.009,NA,0.098,0.441,0.62,0.038,0.463,2.731,0.992,0.008,NA
+Cell_Line_Y,Test_Compound04,4,1.1784,flat,flat,Inf,1.132,No Effect,-0.14,0,1.132,No Effect,0.01,-11.599,1,1.146,Inf,1.078,1.08,0,1.078,0.01,-11.458,1,1.086
+Cell_Line_Y,Test_Compound05,4,1.1784,sigmoid,sigmoid,0.111,-0.832,Cytotoxic,0.62,0.182,-1,Cytotoxic,2.225,0.999,0.001,NA,0.164,0.054,0.66,0.164,0,2.276,0.998,0.002,NA
+Cell_Line_Y,Test_Compound06,4,1.1784,flat,flat,-Inf,-0.91,Cytotoxic,1.88,0,-0.91,Cytotoxic,0.01,0.24,0.76,-0.875,-Inf,0.026,0.04,0,0.026,0.01,0,1,0.038
+Cell_Line_Y,Test_Compound07,4,1.1784,sigmoid,flat,0.104,-0.745,Cytotoxic,0.65,0.125,-0.747,Cytotoxic,5,0.951,0.049,NA,Inf,0.088,0.66,0,0.088,0.01,0.94,0.06,0.663
+Cell_Line_Y,Test_Compound08,4,1.1784,flat,flat,Inf,0.822,No Effect,-0.03,0,0.822,No Effect,0.01,0.532,0.468,1.019,Inf,0.896,1.02,0,0.896,0.01,0.525,0.475,1.012
+Cell_Line_Y,Test_Compound09,4,1.1784,flat,flat,Inf,0.862,No Effect,-0.17,0,0.862,No Effect,0.01,-0.493,1,1.141,Inf,0.919,1.1,0,0.919,0.01,-0.508,1,1.084
+Cell_Line_Y,Test_Compound10,4,1.1784,flat,flat,Inf,0.943,No Effect,-0.04,0,0.943,No Effect,0.01,0.04,0.96,1.027,Inf,0.967,1.02,0,0.967,0.01,0.036,0.964,1.016
+Cell_Line_Y,Test_Compound11,4,1.1784,sigmoid,sigmoid,0.003,-0.822,Cytotoxic,1.45,0.016,-1,Cytotoxic,0.638,0.981,0.019,NA,0.011,0.058,0.22,0.011,0,0.674,0.978,0.022,NA
+Cell_Line_Y,Test_Compound12,4,1.1784,flat,flat,-Inf,-0.971,Cytotoxic,1.89,0,-0.971,Cytotoxic,0.01,0.796,0.204,-0.866,-Inf,0.007,0.04,0,0.007,0.01,0,1,0.043
+Cell_Line_Y,Test_Compound13,4,1.1784,flat,flat,Inf,0.827,No Effect,-0.15,0,0.827,No Effect,0.01,-0.287,1,1.133,Inf,0.899,1.09,0,0.899,0.01,-0.305,1,1.08
+Cell_Line_Y,Test_Compound14,4,1.1784,flat,flat,Inf,1.274,No Effect,-0.29,0,1.274,No Effect,0.01,-60.912,1,1.299,Inf,1.164,1.17,0,1.164,0.01,-59.301,1,1.178
+Cell_Line_Y,Test_Compound15,4,1.1784,flat,flat,Inf,0.817,No Effect,-0.22,0,0.817,No Effect,0.01,-0.516,1,1.191,Inf,0.893,1.13,0,0.893,0.01,-0.537,1,1.115
+Cell_Line_Y,Test_Compound16,4,1.1784,flat,flat,Inf,0.289,Partially Cytostatic,-0.01,0,0.289,Partially Cytostatic,0.01,0.796,0.204,0.957,Inf,0.596,1.01,0,0.596,0.01,0.781,0.219,0.979
+Cell_Line_Y,Test_Compound17,4,1.1784,flat,flat,Inf,0.735,Partially Cytostatic,-0.04,0,0.735,Partially Cytostatic,0.01,0.485,0.515,1.029,Inf,0.846,1.02,0,0.846,0.01,0.473,0.527,1.018
+Cell_Line_Y,Test_Compound18,4,1.1784,sigmoid,sigmoid,0.017,-0.851,Cytotoxic,1.55,0.023,-0.836,Cytotoxic,3.298,1,0,NA,0.022,0.047,0.19,0.021,0.052,3.404,1,0,NA
+Cell_Line_Y,Test_Compound19,4,1.1784,flat,flat,Inf,1.305,No Effect,-0.34,0,1.305,No Effect,0.01,-95.097,1,1.34,Inf,1.182,1.21,0,1.182,0.01,-92.355,1,1.203
+Cell_Line_Y,Test_Compound20,4,1.1784,flat,flat,Inf,-0.763,Cytotoxic,0.13,0,-0.763,Cytotoxic,0.01,0.803,0.197,0.781,Inf,0.081,0.95,0,0.081,0.01,0.756,0.244,0.906
+Cell_Line_Y,Test_Compound21,4,1.1784,flat,flat,Inf,1.407,No Effect,-0.32,0,1.407,No Effect,0.01,-9.995,1,1.326,Inf,1.244,1.19,0,1.244,0.01,-9.792,1,1.195
+Cell_Line_Y,Test_Compound22,4,1.1784,flat,flat,Inf,0.606,Partially Cytostatic,0.22,0,0.606,Partially Cytostatic,0.01,0.902,0.098,0.787,Inf,0.772,0.87,0,0.772,0.01,0.901,0.099,0.876
+Cell_Line_Y,Test_Compound23,4,1.1784,flat,flat,Inf,1.078,No Effect,-0.1,0,1.078,No Effect,0.01,-7.851,1,1.102,Inf,1.046,1.06,0,1.046,0.01,-7.789,1,1.06
+Cell_Line_Y,Test_Compound24,4,1.1784,sigmoid,flat,0.004,-0.912,Cytotoxic,1.66,0.011,-0.927,Cytotoxic,1.101,0.967,0.033,NA,-Inf,0.025,0.13,0,0.025,0.01,0,1,0.151
+Cell_Line_Y,Test_Compound25,4,1.1784,flat,flat,Inf,-0.738,Cytotoxic,0.29,0,-0.738,Cytotoxic,0.01,0.934,0.066,0.611,Inf,0.091,0.85,0,0.091,0.01,0.918,0.082,0.802
+Cell_Line_Y,Test_Compound26,4,1.1784,flat,flat,Inf,1.235,No Effect,-0.25,0,1.235,No Effect,0.01,-23.563,1,1.26,Inf,1.14,1.15,0,1.14,0.01,-22.981,1,1.155
+Cell_Line_Y,Test_Compound27,4,1.1784,flat,flat,Inf,0.557,Partially Cytostatic,0.04,0,0.557,Partially Cytostatic,0.01,0.832,0.168,0.938,Inf,0.744,0.98,0,0.744,0.01,0.825,0.175,0.965
+Cell_Line_Y,Test_Compound28,4,1.1784,flat,flat,Inf,0.414,Partially Cytostatic,0.19,0,0.414,Partially Cytostatic,0.01,0.493,0.507,0.742,Inf,0.665,0.89,0,0.665,0.01,0.487,0.513,0.852
+Cell_Line_Y,Test_Compound29,4,1.1784,sigmoid,flat,Inf,0.596,Partially Cytostatic,0.26,0.053,0.567,Partially Cytostatic,1.075,0.988,0.012,NA,Inf,0.766,0.85,0,0.766,0.01,0.93,0.07,0.853
+Cell_Line_Y,Test_Compound30,4,1.1784,flat,flat,Inf,0.862,No Effect,-0.1,0,0.862,No Effect,0.01,-0.192,1,1.112,Inf,0.919,1.06,0,0.919,0.01,-0.201,1,1.067
+Cell_Line_Y,Test_Compound31,4,1.1784,flat,flat,Inf,0.125,Partially Cytostatic,0.48,0,0.125,Partially Cytostatic,0.01,0.935,0.065,0.546,Inf,0.508,0.73,0,0.508,0.01,0.934,0.066,0.743
+Cell_Line_Y,Test_Compound32,4,1.1784,flat,flat,Inf,1.289,No Effect,-0.31,0,1.289,No Effect,0.01,-78.402,1,1.307,Inf,1.172,1.18,0,1.172,0.01,-76.529,1,1.183
+Cell_Line_Y,Test_Compound33,4,1.1784,sigmoid,sigmoid,0.017,-0.882,Cytotoxic,1.41,0.033,-0.922,Cytotoxic,1.638,0.999,0.001,NA,0.03,0.036,0.26,0.029,0.018,1.672,0.999,0.001,NA
+Cell_Line_Y,Test_Compound34,4,1.1784,sigmoid,sigmoid,0.156,-0.69,Cytotoxic,0.46,0.247,-1,Cytotoxic,2.381,0.995,0.005,NA,0.223,0.111,0.75,0.223,0,2.519,0.993,0.007,NA
+Cell_Line_Y,Test_Compound35,4,1.1784,flat,flat,Inf,1.346,No Effect,-0.36,0,1.346,No Effect,0.01,-143.508,1,1.357,Inf,1.207,1.21,0,1.207,0.01,-139.546,1,1.214
+Cell_Line_Y,Test_Compound36,4,1.1784,sigmoid,sigmoid,0.02,-0.916,Cytotoxic,1.42,0.035,-0.955,Cytotoxic,1.92,0.999,0.001,NA,0.032,0.024,0.25,0.031,0.008,1.952,0.999,0.001,NA
+Cell_Line_Y,Test_Compound37,4,1.1784,flat,flat,Inf,0.331,Partially Cytostatic,0.1,0,0.331,Partially Cytostatic,0.01,0.688,0.312,0.906,Inf,0.619,0.95,0,0.619,0.01,0.67,0.33,0.951
+Cell_Line_Y,Test_Compound38,4,1.1784,flat,flat,Inf,1.012,No Effect,-0.26,0,1.012,No Effect,0.01,-2.277,1,1.254,Inf,1.007,1.16,0,1.007,0.01,-2.261,1,1.152
+Cell_Line_Y,Test_Compound39,4,1.1784,flat,flat,Inf,0.826,No Effect,-0.22,0,0.826,No Effect,0.01,-0.604,1,1.201,Inf,0.898,1.13,0,0.898,0.01,-0.624,1,1.121
+Cell_Line_Y,Test_Compound40,4,1.1784,flat,flat,Inf,1.187,No Effect,-0.34,0,1.187,No Effect,0.01,-7.807,1,1.343,Inf,1.111,1.2,0,1.111,0.01,-7.596,1,1.205
+Cell_Line_Y,Test_Compound41,4,1.1784,flat,flat,Inf,1.186,No Effect,-0.27,0,1.186,No Effect,0.01,-10.739,1,1.249,Inf,1.11,1.16,0,1.11,0.01,-10.488,1,1.148
+Cell_Line_Y,Test_Compound42,4,1.1784,flat,flat,Inf,0.81,No Effect,0.16,0,0.81,No Effect,0.01,-0.041,1,0.875,Inf,0.889,0.91,0,0.889,0.01,-0.041,1,0.927
+Cell_Line_Y,Test_Compound43,4,1.1784,sigmoid,flat,0.004,-0.945,Cytotoxic,1.81,0.009,-0.948,Cytotoxic,1.597,0.998,0.002,NA,-Inf,0.014,0.07,0,0.014,0.01,0,1,0.085
+Cell_Line_Y,Test_Compound44,4,1.1784,sigmoid,sigmoid,0.175,-0.193,Cytotoxic,0.28,0.187,-0.201,Cytotoxic,5,0.978,0.022,NA,0.231,0.343,0.84,0.184,0.339,5,0.975,0.025,NA
+Cell_Line_Y,Test_Compound45,4,1.1784,flat,flat,-Inf,-0.197,Cytotoxic,1.18,0,-0.197,Cytotoxic,0.01,0.709,0.291,-0.176,-Inf,0.341,0.35,0,0.341,0.01,0.571,0.429,0.352
+Cell_Line_Y,Test_Compound46,4,1.1784,flat,flat,Inf,1.059,No Effect,-0.18,0,1.059,No Effect,0.01,-5.828,1,1.165,Inf,1.035,1.11,0,1.035,0.01,-5.776,1,1.098
+Cell_Line_Y,Test_Compound47,4,1.1784,flat,flat,Inf,0.933,No Effect,-0.2,0,0.933,No Effect,0.01,-0.995,1,1.192,Inf,0.96,1.12,0,0.96,0.01,-1,1,1.115
+Cell_Line_Y,Test_Compound48,4,1.1784,flat,flat,Inf,1.119,No Effect,-0.36,0,1.119,No Effect,0.01,-4.239,1,1.355,Inf,1.071,1.22,0,1.071,0.01,-4.161,1,1.213
+Cell_Line_Y,Test_Compound49,4,1.1784,flat,flat,Inf,0.938,No Effect,-0.07,0,0.938,No Effect,0.01,-0.862,1,1.09,Inf,0.963,1.04,0,0.963,0.01,-0.867,1,1.053
+Cell_Line_Y,Test_Compound50,4,1.1784,flat,flat,Inf,1.145,No Effect,-0.43,0,1.145,No Effect,0.01,-4.942,1,1.426,Inf,1.086,1.26,0,1.086,0.01,-4.834,1,1.256
+Cell_Line_Y,Test_Compound51,4,1.1784,flat,flat,Inf,1.464,No Effect,-0.45,0,1.464,No Effect,0.01,-58.77,1,1.435,Inf,1.279,1.27,0,1.279,0.01,-57.122,1,1.261
+Cell_Line_Y,Test_Compound52,4,1.1784,flat,flat,Inf,-0.254,Cytotoxic,0.17,0,-0.254,Cytotoxic,0.01,0.926,0.074,0.762,Inf,0.313,0.91,0,0.313,0.01,0.915,0.085,0.874
+Cell_Line_Y,Test_Compound53,4,1.1784,flat,flat,Inf,1.193,No Effect,-0.21,0,1.193,No Effect,0.01,-71.422,1,1.216,Inf,1.115,1.13,0,1.115,0.01,-70.031,1,1.129
+Cell_Line_Y,Test_Compound54,4,1.1784,flat,flat,Inf,0.746,Partially Cytostatic,-0.24,0,0.746,Partially Cytostatic,0.01,-0.303,1,1.205,Inf,0.852,1.14,0,0.852,0.01,-0.328,1,1.124
+Cell_Line_Y,Test_Compound55,4,1.1784,sigmoid,flat,0.001,-0.882,Cytotoxic,1.84,0.003,-0.879,Cytotoxic,1.422,0.997,0.003,NA,-Inf,0.036,0.05,0,0.036,0.01,0,1,0.054
+Cell_Line_Y,Test_Compound56,4,1.1784,sigmoid,sigmoid,0.009,-0.853,Cytotoxic,1.65,0.014,-0.845,Cytotoxic,2.115,0.999,0.001,NA,0.014,0.046,0.14,0.013,0.049,2.194,0.999,0.001,NA
+Cell_Line_Y,Test_Compound57,4,1.1784,sigmoid,sigmoid,0.132,0.268,Partially Cytostatic,0.46,2.156,-1,Cytotoxic,0.393,0.988,0.012,NA,1.258,0.584,0.74,1.258,0,0.402,0.988,0.012,NA
+Cell_Line_Y,Test_Compound58,4,1.1784,sigmoid,sigmoid,0.078,-0.782,Cytotoxic,0.72,0.129,-0.893,Cytotoxic,2.015,0.971,0.029,NA,0.121,0.074,0.61,0.117,0.031,2.069,0.964,0.036,NA
+Cell_Line_Y,Test_Compound59,4,1.1784,flat,flat,Inf,1.268,No Effect,-0.4,0,1.268,No Effect,0.01,-32.328,1,1.384,Inf,1.16,1.24,0,1.16,0.01,-31.573,1,1.23
+Cell_Line_Y,Test_Compound60,4,1.1784,sigmoid,sigmoid,0.056,-0.013,Cytotoxic,0.6,0.559,-1,Cytotoxic,0.478,0.97,0.03,NA,0.357,0.435,0.66,0.357,0,0.488,0.967,0.033,NA
+Cell_Line_Y,Test_Compound61,4,1.1784,flat,flat,Inf,1.272,No Effect,-0.19,0,1.272,No Effect,0.01,-1.659,1,1.202,Inf,1.162,1.11,0,1.162,0.01,-1.641,1,1.121
+Cell_Line_Y,Test_Compound62,4,1.1784,flat,flat,Inf,1.146,No Effect,-0.17,0,1.146,No Effect,0.01,-14.052,1,1.178,Inf,1.087,1.1,0,1.087,0.01,-13.798,1,1.106
+Cell_Line_Y,Test_Compound63,4,1.1784,flat,flat,Inf,0.925,No Effect,-0.12,0,0.925,No Effect,0.01,-0.317,1,1.085,Inf,0.956,1.07,0,0.956,0.01,-0.321,1,1.051
+Cell_Line_Y,Test_Compound64,4,1.1784,flat,flat,Inf,0.6,Partially Cytostatic,-0,0,0.6,Partially Cytostatic,0.01,0.598,0.402,0.989,Inf,0.769,1,0,0.769,0.01,0.584,0.416,0.996
+Cell_Line_Y,Test_Compound65,4,1.1784,flat,flat,-Inf,0.24,Partially Cytostatic,0.62,0,0.24,Partially Cytostatic,0.01,0.945,0.055,0.415,Inf,0.569,0.65,0,0.569,0.01,0.947,0.053,0.666
+Cell_Line_Y,Test_Compound66,4,1.1784,flat,flat,Inf,0.963,No Effect,-0.13,0,0.963,No Effect,0.01,-1.445,1,1.122,Inf,0.978,1.08,0,0.978,0.01,-1.449,1,1.073
+Cell_Line_Y,Test_Compound67,4,1.1784,sigmoid,sigmoid,0.042,0.074,Partially Cytostatic,0.66,0.04,0.065,Partially Cytostatic,2.306,1,0,NA,0.143,0.481,0.63,0.039,0.476,2.304,1,0,NA
+Cell_Line_Y,Test_Compound68,4,1.1784,flat,flat,Inf,1.228,No Effect,-0.21,0,1.228,No Effect,0.01,-2.894,1,1.253,Inf,1.136,1.13,0,1.136,0.01,-2.863,1,1.151
+Cell_Line_Y,Test_Compound69,4,1.1784,sigmoid,flat,0.01,-0.834,Cytotoxic,1.72,0.012,-0.802,Cytotoxic,5,0.99,0.01,NA,-Inf,0.053,0.1,0,0.053,0.01,0,1,0.118
+Cell_Line_Y,Test_Compound70,4,1.1784,flat,flat,Inf,1.119,No Effect,-0.2,0,1.119,No Effect,0.01,-13.806,1,1.208,Inf,1.07,1.12,0,1.07,0.01,-13.626,1,1.124
