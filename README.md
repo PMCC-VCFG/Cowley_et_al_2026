@@ -27,8 +27,8 @@ The /dashboard directory contains full annotated R Markdown scripts for each das
 Each dashboard has a corresponding directory in the /data folder.
 
 ## License
-* Code in this repository is licensed under the MIT License.
+* Code in this repository is licensed under the MIT License (see license.md)
 * Dashboard outputs (HTML files) are licensed under CC BY 4.0.
-* Datasets are licensed under CC0 1.0 (public domain).
+* Datasets are licensed under CC0 1.0 (public domain) (see license-data.md)
 
 Please cite the associated publication when using this work.
