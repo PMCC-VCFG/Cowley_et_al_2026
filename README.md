@@ -26,6 +26,9 @@ The /dashboard directory contains full annotated R Markdown scripts for each das
 ### Example data
 Each dashboard has a corresponding directory in the /data folder.
 
+### Packages
+Dashboards were created using R version 4.5.0. See renv.lock for specific packages and versions used.
+
 ## License
 * Code in this repository is licensed under the MIT License (see license.md)
 * Dashboard outputs (HTML files) are licensed under CC BY 4.0.
